@@ -6,105 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-        }
-        
-        input {
-            outline: none;
-            height: 30px;
-            border: none;
-        }
-        
-        button {
-            height: 30px;
-        }
-        
-        header {
-            margin-left: 200px;
-            height: 100px;
-            width: 100%;
-            background-color: purple;
-        }
-        /* 侧边样式 */
-        
-        #aside {
-            width: 200px;
-            height: 500px;
-            background-color: pink;
-            float: left;
-            text-align: center;
-        }
-        
-        #aside button {
-            width: 200px;
-            height: 30px;
-            font-size: 16px;
-        }
-        
-        #input1 {
-            width: 120px;
-        }
-        
-        #btn2 {
-            width: 120px;
-        }
-        
-        #file {
-            padding-top: 2px;
-        }
-        
-        #aside #a-btn4 {
-            width: 100px;
-        }
-        
-        #aside #a-btn5 {
-            width: 100px;
-        }
-        /* 头部样式 */
-        
-        #ys {
-            line-height: 100px;
-            width: 180px;
-            float: left;
-        }
-        
-        #input {
-            width: 120px;
-        }
-        
-        .huabu {
-            position: relative;
-            height: 800px;
-            width: 1200px;
-            float: left;
-        }
-        
-        #sf {
-            float: left;
-            line-height: 50px;
-            width: 100px;
-            text-align: center;
-        }
-        
-        #scale-range {
-            display: block;
-            width: 100px;
-        }
-        
-        #cd {
-            /* line-height: 100px; */
-            width: 120px;
-            float: left;
-            margin-left: 20px;
-        }
-        
-        #btn1 {
-            width: 120px;
-        }
-    </style>
+    <link rel="stylesheet" href="demo.css" type="text/css">
 </head>
 
 <body>
@@ -127,9 +29,10 @@
             <input id="input1" type="text" placeholder="输入要更改的图层颜色">
             <button id="btn2">点击更改颜色</button>
         </div>
-        <!-- 增加阴影 -->
-        <div id="yy">
-
+        <!-- 增加透明度 -->
+        <div id="transparency">
+            <span>更改透明度</span>
+            <input type="range" id="tp-range" min="0" max="1.0" step="0.1" value="1" />
         </div>
     </header>
 
@@ -153,179 +56,20 @@
             <li>
                 <button id="a-btn6">开启图片拖拽</button>
             </li>
+            <li>
+                <button id="a-btn7">增加图片阴影</button>
+            </li>
         </ul>
     </div>
 
     <!-- 实现模块 -->
 
     <div class="huabu">
-        <canvas id="canvas" width="700" height="700"></canvas>
+        <canvas id="canvas" width="700" height="700">浏览器不支持canvas</canvas>
     </div>
 
 
-    <script>
-        var canvas = document.getElementById("canvas");
-        var ctx = canvas.getContext("2d");
-        var isShow = true;
-        // 绘制矩形
-
-        var a_btn0 = document.getElementById("a-btn0");
-        a_btn0.onclick = function() {
-            if (isShow) {
-                ctx.fillRect(150, 150, 400, 400);
-                isShow = false;
-            } else {
-                isShow = true;
-                ctx.clearRect(150, 150, 400, 400);
-            }
-        }
-
-        // 更改颜色
-        var btn = document.getElementById("btn");
-        var input = document.getElementById("input");
-        btn.addEventListener('click', function() {
-            ctx.clearRect(150, 150, 400, 400);
-            ctx.rect(150, 150, 400, 400);
-            ctx.fillStyle = input.value;
-            ctx.fill();
-
-        }, false);
-        // 图片缩放
-        var slider = document.getElementById("scale-range");
-
-        slider.addEventListener('change', function() {
-            ctx.clearRect(0, 0, 700, 700);
-            ctx.save();
-            ctx.fillRect(150, 150, 400 * slider.value, 400 * slider.value);
-            // ctx.scale(slider.value, slider.value);
-            // ctx.setTransform(slider.value, 0, 0, slider.value, 0, 0);
-            ctx.restore();
-        })
-
-        // 图层叠加
-        var btn1 = document.getElementById("btn1");
-        btn1.addEventListener('click', function() {
-            console.log(111);
-            ctx.clearRect(200, 200, 200, 200);
-            ctx.rect(200, 200, 200, 200);
-            ctx.fillStyle = "white";
-            ctx.fillRect(200, 200, 200, 200);
-            // ctx.strokeRect(200, 200, 200, 200);
-
-        }, false);
-        // 更改图层颜色
-        var btn2 = document.getElementById("btn2");
-        var input1 = document.getElementById("input1");
-        btn2.addEventListener('click', function() {
-            ctx.clearRect(200, 200, 200, 200);
-            ctx.rect(200, 200, 200, 200);
-            ctx.fillStyle = input1.value;
-            ctx.fill();
-        }, false)
-
-        // 绘制三角形
-        var a_btn1 = document.getElementById("a-btn1");
-        a_btn1.onclick = function() {
-            if (isShow) {
-                ctx.rect(150, 150, 400, 400);
-                ctx.beginPath();
-                ctx.moveTo(150, 150);
-                ctx.lineTo(150, 300);
-                ctx.lineTo(300, 300);
-                ctx.fill();
-                isShow = false;
-            } else {
-                isShow = true;
-                ctx.clearRect(150, 150, 400, 400);
-            }
-        }
-
-        // 绘制圆形
-        var a_btn2 = document.getElementById("a-btn2");
-        a_btn2.onclick = function() {
-            if (isShow) {
-                ctx.rect(150, 150, 400, 400);
-                ctx.beginPath();
-                ctx.arc(300, 300, 150, 0, 2 * Math.PI);
-                // ctx.stroke();
-                ctx.fill();
-                isShow = false;
-            } else {
-                isShow = true;
-                ctx.clearRect(150, 150, 400, 400);
-            }
-        }
-
-        // 选择图片
-        var a_btn3 = document.getElementById("a-btn3");
-        var a_btn6 = document.getElementById("a-btn6");
-        a_btn3.addEventListener('click', function() {
-            var img = new Image();
-            var file = document.getElementById("file").files[0];
-            // 采用fileReader构造器将上传图片转化为64位编码
-            var reader = new FileReader();
-            reader.readAsDataURL(file);
-            reader.onload = function() {
-                var data = reader.result;
-                img.src = data;
-                img.onload = function() {
-                    slider.onchange = function() {
-                        img.width = img.width * slider.value;
-                    }
-                    a_btn6.onclick = function() {
-                        var x = 0;
-                        var y = 0;
-                        canvas.onclick = function(e) {
-                            x = e.offsetX - img.width / 2;
-                            y = e.offsetY - img.height / 2;
-                            console.log(x, y);
-                        };
-                        setInterval(function() {
-                            ctx.clearRect(0, 0, 700, 700);
-                            ctx.drawImage(img, x, y);
-                        }, 20);
-                    }
-                    ctx.drawImage(img, 150, 150);
-                }
-            };
-        })
-
-        // 平铺
-        var a_btn4 = document.getElementById("a-btn4");
-        a_btn4.addEventListener('click', function() {
-            var img = new Image();
-            var file = document.getElementById("file").files[0];
-            var reader = new FileReader();
-            reader.readAsDataURL(file);
-            reader.onload = function() {
-                var data = reader.result;
-                img.src = data;
-                img.onload = function() {
-                    var pattern = ctx.createPattern(img, 'repeat');
-                    ctx.fillStyle = pattern;
-                    ctx.fillRect(150, 150, 400, 400);
-                }
-            };
-        })
-
-        // 旋转
-        var a_btn5 = document.getElementById("a-btn5");
-        a_btn5.addEventListener('click', function() {
-            var img = new Image();
-            var file = document.getElementById("file").files[0];
-            var reader = new FileReader();
-            reader.readAsDataURL(file);
-            reader.onload = function() {
-                var data = reader.result;
-                img.src = data;
-                console.log(img.width);
-                img.onload = function() {
-                    ctx.translate(canvas.width / 2, canvas.height / 2);
-                    ctx.rotate(Math.PI / 6);
-                }
-            };
-        })
-    </script>
+    <script src="demo.js"></script>
 </body>
 
 </html>

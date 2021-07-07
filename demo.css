@@ -1,0 +1,107 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+input {
+    outline: none;
+    height: 30px;
+    border: none;
+}
+
+button {
+    height: 30px;
+}
+
+header {
+    margin-left: 200px;
+    height: 100px;
+    width: 100%;
+    /* background-color: purple; */
+}
+
+
+/* 侧边样式 */
+
+#aside {
+    width: 200px;
+    height: 500px;
+    /* background-color: pink; */
+    float: left;
+    text-align: center;
+}
+
+#aside button {
+    width: 200px;
+    height: 30px;
+    font-size: 16px;
+}
+
+#input1 {
+    width: 120px;
+}
+
+#btn2 {
+    width: 120px;
+}
+
+#file {
+    padding-top: 2px;
+}
+
+#aside #a-btn4 {
+    width: 100px;
+}
+
+#aside #a-btn5 {
+    width: 100px;
+}
+
+
+/* 头部样式 */
+
+#ys {
+    line-height: 100px;
+    width: 180px;
+    float: left;
+}
+
+#input {
+    width: 120px;
+}
+
+.huabu {
+    position: relative;
+    height: 800px;
+    width: 1200px;
+    float: left;
+}
+
+#sf,
+#transparency {
+    float: left;
+    line-height: 50px;
+    width: 100px;
+    text-align: center;
+}
+
+#scale-range,
+#tp-range {
+    display: block;
+    width: 100px;
+}
+
+#cd {
+    /* line-height: 100px; */
+    width: 120px;
+    float: left;
+    margin-left: 20px;
+}
+
+#btn1 {
+    width: 120px;
+}
+
+#transparency {
+    margin-left: 10px;
+}
