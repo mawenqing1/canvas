@@ -175,15 +175,15 @@ a_btn3.addEventListener('click', () => {
 // 平铺
 const a_btn4 = document.getElementById("a-btn4");
 a_btn4.addEventListener('click', () => {
-    var img = new Image();
-    var file = document.getElementById("file").files[0];
-    var reader = new FileReader();
+    let img = new Image();
+    let file = document.getElementById("file").files[0];
+    let reader = new FileReader();
     reader.readAsDataURL(file);
     reader.onload = function() {
-        var data = reader.result;
+        let data = reader.result;
         img.src = data;
         img.onload = () => {
-            var pattern = ctx.createPattern(img, 'repeat');
+            let pattern = ctx.createPattern(img, 'repeat');
             ctx.fillStyle = pattern;
             ctx.fillRect(150, 150, 400, 400);
         }
