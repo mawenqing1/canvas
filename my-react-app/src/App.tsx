@@ -1,12 +1,16 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect, useRef, Props } from 'react'
 import { render } from 'react-dom';
 import './App.less'
 type IAlign = "start" | "center" | "end" | "left" | "right";
 type BaseLine = "alphabetic" | "bottom" | "hanging" | "ideographic" | "middle" | "top";
 type TextDir = "inherit" | "ltr" | "rtl";
 type Cap = "butt" | "round" | "square";
+
+interface Ipros {
+  changeHandler: (colors: string, transparency: number, types: number) => void;
+};
 // 更改颜色透明度大小组件
-function Change(props: any) {
+function Change(props: Ipros) {
   const { changeHandler } = props;
   const [colors, setColors] = useState<string>('');
   const [transparency, setTransparency] = useState<number>(1);
@@ -39,6 +43,9 @@ function Change(props: any) {
 
 };
 // 点击显示隐藏组件
+// interface Blocks {
+//   asider: (show: string, shadow?: boolean) => void;
+// }
 function Block(props: any) {
   const { asider } = props;
 
@@ -76,6 +83,10 @@ function Block(props: any) {
   )
 };
 // 旋转组件
+// interface Rote {
+//   rots:(cir: boolean) => void
+//   cir:(cir: boolean) => void
+// }
 function RoteBox(props: any) {
   const { rots, cir } = props;
 
@@ -260,20 +271,42 @@ function ChangeDash(props: any) {
       <ul>
         <li>
           <p>虚线中实线长度</p>
-          <input onChange={(e) => drawDash('solids',e.target.value)} type="text"  placeholder="请输入数字" />
+          <input onChange={(e) => drawDash('solids', e.target.value)} type="text" placeholder="请输入数字" />
         </li>
         <li>
           <p>虚线中空白长度</p>
-          <input onChange={(e) => drawDash('dottdeds',e.target.value)} type="text" placeholder="请输入数字" />
+          <input onChange={(e) => drawDash('dottdeds', e.target.value)} type="text" placeholder="请输入数字" />
         </li>
         <li>
           <p>虚线起始偏移</p>
-          <input onChange={(e) => drawDash('deviations',e.target.value)} type="text" placeholder="请输入数字" />
+          <input onChange={(e) => drawDash('deviations', e.target.value)} type="text" placeholder="请输入数字" />
         </li>
       </ul>
     </div>
   )
 };
+
+// 渐变组件
+function ChangeColor(props: any) {
+  const { colorChange } = props;
+
+  return (
+    <div className="ChangeColor">
+      <ul>
+        <li>
+          <p>渐变颜色1：</p>
+          <input onChange={(e) => colorChange('start', e.target.value)} type="text" placeholder="渐变颜色1" />
+        </li>
+        <li>
+          <p>渐变颜色2：</p>
+          <input onChange={(e) => colorChange('end', e.target.value)} type="text" placeholder="渐变颜色2" />
+        </li>
+      </ul>
+    </div>
+  )
+};
+
+
 
 function App() {
   const canvas = useRef<HTMLCanvasElement>(null);
@@ -335,7 +368,11 @@ function App() {
   // 虚线声明
   const [solid, setSolid] = useState<number>(0);
   const [dotted, setDotted] = useState<number>(0);
-  const [deviation,setDeviation] = useState<number>(0);
+  const [deviation, setDeviation] = useState<number>(0);
+
+  // 渐变声明
+  const [start, setStart] = useState<string>('black');
+  const [end, setEnd] = useState<string>('black');
 
   // 点击显示隐藏
   useEffect(() => {
@@ -345,7 +382,7 @@ function App() {
     ctx!.fillStyle = typeof ctx!.fillStyle === 'object' ? '#000' : ctx!.fillStyle;
     ctx!.save();
     ctx!.beginPath();
-    ctx!.rect(0 + pointX * 10, 0 + pointY * 10, 500 * (shapeX / 5), 500 * (shapeY / 5));
+    ctx!.rect(0 + pointX * 50, 0 + pointY * 50, 500 * (shapeX / 5), 500 * (shapeY / 5));
     ctx!.stroke();
     ctx!.closePath();
     ctx!.clip();
@@ -354,16 +391,19 @@ function App() {
     if (isShow) {
       switch (show) {
         case 'rect':
-          drawRect(ctx!, transparency, types, colors, shadow, shadowX, shadowY, blur, shaColor);
+          drawRect(ctx!, transparency, types, colors, shadow, shadowX, shadowY, blur, shaColor,start,end);
+
           break;
         case 'triangle':
-          drawTriangle(ctx!, transparency, types, colors, shadow, shadowX, shadowY, blur, shaColor);
+          drawTriangle(ctx!, transparency, types, colors, shadow, shadowX, shadowY, blur, shaColor,start,end);
+
           break;
         case 'circle':
-          drawCircle(ctx!, transparency, types, colors, shadow, shadowX, shadowY, blur, shaColor);
+          drawCircle(ctx!, transparency, types, colors, shadow, shadowX, shadowY, blur, shaColor,start,end);
+
           break;
         case 'line':
-          drawLine(ctx!, transparency, types, colors, shadow, shadowX, shadowY, blur, shaColor, lwidth, cap,solid,dotted,deviation);
+          drawLine(ctx!, transparency, types, colors, shadow, shadowX, shadowY, blur, shaColor, lwidth, cap, solid, dotted, deviation);
           break;
         case 'arc':
           drawArc(ctx!, transparency, types, colors, shadow, shadowX, shadowY, blur, shaColor);
@@ -385,7 +425,7 @@ function App() {
       ctx!.clearRect(0, 0, canvasDom!.width, canvasDom!.height);
     }
     ctx!.restore();
-  }, [isShow, show, shadow, transparency, types, shadowX, shadowY, blur, shaColor, lwidth, cap, shapeX, shapeY, pointY, pointX,cap,solid,dotted,deviation]);
+  }, [isShow, show, shadow, transparency, types, shadowX, shadowY, blur, shaColor, lwidth, cap, shapeX, shapeY, pointY, pointX, cap, solid, dotted, deviation, start, end]);
 
   // 旋转组件
   let jd: number = 30;
@@ -474,29 +514,44 @@ function App() {
   }, [clear]);
 
   // 绘制矩形公共函数
-  const drawRect = (ctx: CanvasRenderingContext2D, transparency: number, types: number, colors: string, shadow: boolean, shadowX: number, shadowY: number, blur: number, shaColor: string) => {
+  const drawRect = (ctx: CanvasRenderingContext2D, transparency: number, types: number, colors: string, shadow: boolean, shadowX: number, shadowY: number, blur: number, shaColor: string,start:string,end:string) => {
     if (shadow) {
       ctx.shadowOffsetX = shadowX;
       ctx.shadowOffsetY = shadowY;
       ctx.shadowBlur = blur;
       ctx.shadowColor = shaColor;
     };
+    ctx!.beginPath();
+    const lineargradient = ctx!.createLinearGradient(0, 0, 800, 800);
+    lineargradient.addColorStop(0, start);
+    lineargradient.addColorStop(1, end);
     ctx!.globalAlpha = transparency;
-    ctx!.fillStyle = colors;
+    if(colors === '') {
+      ctx!.fillStyle = lineargradient;
+    } else {
+      ctx!.fillStyle = colors;
+    };
     ctx!.fillRect(150, 150, 400 * types, 400 * types);
 
   };
 
   // 绘制三角公共函数
-  const drawTriangle = (ctx: CanvasRenderingContext2D, transparency: number, types: number, colors: string, shadow: boolean, shadowX: number, shadowY: number, blur: number, shaColor: string) => {
+  const drawTriangle = (ctx: CanvasRenderingContext2D, transparency: number, types: number, colors: string, shadow: boolean, shadowX: number, shadowY: number, blur: number, shaColor: string,start:string,end:string) => {
     if (shadow) {
       ctx.shadowOffsetX = shadowX;
       ctx.shadowOffsetY = shadowY;
       ctx.shadowBlur = blur;
       ctx.shadowColor = shaColor;
     };
+    const lineargradient = ctx!.createLinearGradient(0, 0, 800, 800);
+    lineargradient.addColorStop(0, start);
+    lineargradient.addColorStop(1, end);
     ctx!.globalAlpha = transparency;
-    ctx!.fillStyle = colors;
+    if(colors === '') {
+      ctx!.fillStyle = lineargradient;
+    } else {
+      ctx!.fillStyle = colors;
+    };
     ctx!.beginPath();
     ctx!.moveTo(150 * types, 150 * types);
     ctx!.lineTo(150 * types, 300 * types);
@@ -505,7 +560,7 @@ function App() {
   };
 
   // 绘制线条公共函数
-  const drawLine = (ctx: CanvasRenderingContext2D, transparency: number, types: number, colors: string, shadow: boolean, shadowX: number, shadowY: number, blur: number, shaColor: string, lwidth: number, cap: Cap,solid:number, dotted:number,deviation:number) => {
+  const drawLine = (ctx: CanvasRenderingContext2D, transparency: number, types: number, colors: string, shadow: boolean, shadowX: number, shadowY: number, blur: number, shaColor: string, lwidth: number, cap: Cap, solid: number, dotted: number, deviation: number) => {
     if (shadow) {
       ctx.shadowOffsetX = shadowX;
       ctx.shadowOffsetY = shadowY;
@@ -539,15 +594,22 @@ function App() {
   };
 
   // 绘制圆公共函数
-  const drawCircle = (ctx: CanvasRenderingContext2D, transparency: number, types: number, colors: string, shadow: boolean, shadowX: number, shadowY: number, blur: number, shaColor: string) => {
+  const drawCircle = (ctx: CanvasRenderingContext2D, transparency: number, types: number, colors: string, shadow: boolean, shadowX: number, shadowY: number, blur: number, shaColor: string,start:string,end:string) => {
     if (shadow) {
       ctx.shadowOffsetX = shadowX;
       ctx.shadowOffsetY = shadowY;
       ctx.shadowBlur = blur;
       ctx.shadowColor = shaColor;
     };
+    const lineargradient = ctx!.createLinearGradient(0, 0, 800, 800);
+    lineargradient.addColorStop(0, start);
+    lineargradient.addColorStop(1, end);
     ctx!.globalAlpha = transparency;
-    ctx!.fillStyle = colors;
+    if(colors === '') {
+      ctx!.fillStyle = lineargradient;
+    } else {
+      ctx!.fillStyle = colors;
+    };
     ctx!.beginPath();
     ctx!.arc(300, 300, 150 * types, 0, 2 * Math.PI);
     ctx!.fill();
@@ -599,12 +661,12 @@ function App() {
     let reader = new FileReader();
     reader.readAsDataURL(file);
     reader.onload = function () {
-      let data: any = reader.result;
+      let data:any = reader.result;
       img.src = data;
       img.onload = () => {
         ctx!.save();
         ctx!.beginPath();
-        ctx!.rect(0 + pointX * 10, 0 + pointY * 10, 500 * (shapeX / 5), 500 * (shapeY / 5));
+        ctx!.rect(0 + pointX * 50, 0 + pointY * 50, 500 * (shapeX / 5), 500 * (shapeY / 5));
         ctx!.stroke();
         ctx!.closePath();
         ctx!.clip();
@@ -629,8 +691,24 @@ function App() {
         };
         ctx!.globalAlpha = transparency;
         ctx!.drawImage(img, 150, 150, img.width * types, img.height * types);
-        ctx.restore();
-      }
+        img.style.display = 'none';
+        ctx!.restore();
+        };
+        // 吸色功能
+        const colorPick = document.getElementById('color');
+        const draw = document.getElementById('draw');
+        draw!.onclick = function pick(e:any) {
+          const x = e.layerX;
+          const y = e.layerY;
+          console.log(x,y);
+          const pixel = ctx!.getImageData(x,y,1,1);
+          const base = pixel.data;
+          const rgba = `rgba(${base[0]}, ${base[1]}, ${base[2]}, ${base[3] / 255})`;
+          console.log();
+          
+          colorPick!.style.background =rgba; 
+          canvasDom!.addEventListener('mousemove', pick);
+        };  
     }
   };
 
@@ -713,15 +791,23 @@ function App() {
     }
   };
 
-  const drawDash = (type:string,value:number) => {
-    if(type === 'solids') {
+  const drawDash = (type: string, value: number) => {
+    if (type === 'solids') {
       setSolid(value);
-    }else if(type === 'dottdeds') {
+    } else if (type === 'dottdeds') {
       setDotted(value);
-    }else{
+    } else {
       setDeviation(value);
     }
   };
+
+  const colorChange = (type: string, value: string) => {
+    if (type === 'start') {
+      setStart(value);
+    } else {
+      setEnd(value);
+    }
+  }
 
   return (
     <div className="App">
@@ -732,6 +818,11 @@ function App() {
         <ChangeBig fontSize={fontSize} />
         <ChangeLine lineStyle={lineStyle} />
         <ChangeDash drawDash={drawDash} />
+        <ChangeColor colorChange={colorChange} />
+        <div className="obtain">
+          <button id="draw">吸色</button>
+          <div id="color"></div>
+        </div>
       </div>
       <div className="asiderL">
         <Block asider={asider} />
