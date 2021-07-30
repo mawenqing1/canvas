@@ -3,6 +3,7 @@ import { initData, reducer, ContextData } from './change'
 import { render } from 'react-dom';
 import './App.less'
 import ChangeComponent from './component/Change'
+import drawRect from './drawRect'
 
 type IAlign = "start" | "center" | "end" | "left" | "right";
 type BaseLine = "alphabetic" | "bottom" | "hanging" | "ideographic" | "middle" | "top";
@@ -547,30 +548,113 @@ function App() {
     }
   }, [clear]);
 
-  // 绘制矩形公共函数
-  const drawRect = (ctx: CanvasRenderingContext2D, transparency: number, types: number, colors: string, shadow: boolean, shadowX: number, shadowY: number, blur: number, shaColor: string, start: string, end: string, layers: string) => {
-    if (shadow) {
-      ctx.shadowOffsetX = shadowX;
-      ctx.shadowOffsetY = shadowY;
-      ctx.shadowBlur = blur;
-      ctx.shadowColor = shaColor;
-    };
-    ctx!.beginPath();
-    const lineargradient = ctx!.createLinearGradient(0, 0, 800, 800);
-    lineargradient.addColorStop(0, start);
-    lineargradient.addColorStop(1, end);
+  // 判断点是否在区域内
+  const judge = (x1: number, y1: number, width: number, height: number, x2: number, y2: number) => {
+    let ltX = (x1 - originX1.current) * Math.cos((Math.PI / 180) * (-cir)) + (y1 - originY1.current) * Math.sin((Math.PI / 180) * (-cir)) + originX1.current;
+    let ltY = (y1 - originY1.current) * Math.cos(Math.PI / 180 * (-cir)) - (x1 - originX1.current) * Math.sin(Math.PI / 180 * (-cir)) + originY1.current;
 
-    ctx!.globalAlpha = transparency;
-    if (colors === '') {
-      ctx!.fillStyle = lineargradient;
-    } else {
-      ctx!.fillStyle = colors;
+    let rtX = (x1 + width - originX1.current) * Math.cos((Math.PI / 180) * (-cir)) + (y1 - originY1.current) * Math.sin((Math.PI / 180) * (-cir)) + originX1.current;
+    let rtY = (y1 - originY1.current) * Math.cos(Math.PI / 180 * (-cir)) - (x1 + width - originX1.current) * Math.sin(Math.PI / 180 * (-cir)) + originY1.current;
+
+    let rbX = (x1 + width - originX1.current) * Math.cos((Math.PI / 180) * (-cir)) + (y1 + height - originY1.current) * Math.sin((Math.PI / 180) * (-cir)) + originX1.current;
+    let rbY = (y1 + height - originY1.current) * Math.cos(Math.PI / 180 * (-cir)) - (x1 + width - originX1.current) * Math.sin(Math.PI / 180 * (-cir)) + originY1.current;
+
+    let lbX = (x1 - originX1.current) * Math.cos((Math.PI / 180) * (-cir)) + (y1 + height - originY1.current) * Math.sin((Math.PI / 180) * (-cir)) + originX1.current;
+    let lbY = (y1 + height - originY1.current) * Math.cos(Math.PI / 180 * (-cir)) - (x1 - originX1.current) * Math.sin(Math.PI / 180 * (-cir)) + originY1.current;
+    // fabric源码判断点是否在区域内
+    const oCoords: any = {
+      tl: {
+        x: ltX,
+        y: ltY
+      },
+      tr: {
+        x: rtX,
+        y: rtY
+      },
+      br: {
+        x: rbX,
+        y: rbY
+      },
+      bl: {
+        x: lbX,
+        y: lbY
+      }
     };
-    ctx!.fillRect(150, 150, 400 * types, 400 * types);
-    ctx!.globalCompositeOperation = layers;
-    ctx!.font = "48px serif";
-    ctx!.fillText('图层模式', 200, 200);
-  };
+    const point = {
+      x: x2,
+      y: y2
+    };
+    function lineBox(oCoords: any) {
+
+      var lines: any = {
+        topline: {
+          o: oCoords.tl,
+          d: oCoords.tr
+        },
+        rightline: {
+          o: oCoords.tr,
+          d: oCoords.br
+        },
+        bottomline: {
+          o: oCoords.br,
+          d: oCoords.bl
+        },
+        leftline: {
+          o: oCoords.bl,
+          d: oCoords.tl
+        },
+      };
+      return lines;
+    };
+    let lines = lineBox(oCoords);
+    function pointBox(point: { y: number; x: number; }, lines: any) {
+
+      var b1, b2, a1, a2, xi, // yi,
+        xcount = 0,
+        iLine;
+
+      for (var lineKey in lines) {
+        iLine = lines[lineKey];
+        // optimisation 1: line below point. no cross
+        if ((iLine.o.y < point.y) && (iLine.d.y < point.y)) {
+          continue;
+        }
+        // optimisation 2: line above point. no cross
+        if ((iLine.o.y >= point.y) && (iLine.d.y >= point.y)) {
+          continue;
+        }
+        // optimisation 3: vertical line case
+        if ((iLine.o.x === iLine.d.x) && (iLine.o.x >= point.x)) {
+          xi = iLine.o.x;
+          // yi = point.y;
+        }
+        // calculate the intersection point
+        else {
+          b1 = 0;
+          b2 = (iLine.d.y - iLine.o.y) / (iLine.d.x - iLine.o.x);
+          a1 = point.y - b1 * point.x;
+          a2 = iLine.o.y - b2 * iLine.o.x;
+
+          xi = -(a1 - a2) / (b1 - b2);
+          // yi = a1 + b1 * xi;
+        }
+        // dont count xi < point.x cases
+        if (xi >= point.x) {
+          xcount += 1;
+        }
+        // optimisation 4: specific for square images
+        if (xcount === 2) {
+          break;
+        }
+      }
+      return xcount;
+    };
+    let jud = pointBox(point, lines);
+    return jud;
+  }
+
+  // 绘制矩形公共函数
+  
 
   // 绘制三角公共函数
   const drawTriangle = (ctx: CanvasRenderingContext2D, transparency: number, types: number, colors: string, shadow: boolean, shadowX: number, shadowY: number, blur: number, shaColor: string, start: string, end: string) => {
@@ -690,7 +774,6 @@ function App() {
 
   // 文件图片公共函数
   const drawImg = (ctx: CanvasRenderingContext2D, canvasDom: HTMLCanvasElement, myCanvasDom: HTMLCanvasElement, ctx_1: CanvasRenderingContext2D, canvasClearDom: HTMLCanvasElement, canvasClearDom_1: HTMLCanvasElement, showShadow: boolean, transparency: number, types: number, shadowX: number, shadowY: number, blur: number, shaColor: string, cir: number) => {
-
     let img = new Image();
 
     const drawFillRect = () => {
@@ -709,7 +792,6 @@ function App() {
     if (!file) {
       return;
     }
-    const a_btn6 = document.getElementById("a-btn6");
     // 采用fileReader构造器将上传图片转化为64位编码
     let reader = new FileReader();
     reader.readAsDataURL(file);
@@ -750,10 +832,22 @@ function App() {
 
       };
 
+      // 检测像素点更改鼠标样式
+      myCanvasDom!.addEventListener('mousemove', (e) => {
+        let x = e.offsetX;
+        let y = e.offsetY;
+        const pixel = ctx!.getImageData(x, y, 1, 1);
+        const base = pixel.data;
+        if (base[3] / 255 !== 0) {
+          myCanvasDom!.style.cursor = 'move';
+        } else {
+          myCanvasDom!.style.cursor = 'default';
+        }
+      })
+
       if (beforeCir.current !== cir) {
         beforeCir.current = cir;
       } else {
-        
         originX.current = img.offsetLeft;
         originY.current = img.offsetTop;
       };
@@ -762,19 +856,18 @@ function App() {
       myCanvasDom!.onmousedown = (e) => {
         let x2 = e.offsetX;
         let y2 = e.offsetY;
-
         // 图片顶点旋转坐标
         let ltX = (originX.current - originX1.current) * Math.cos((Math.PI / 180) * (-cir)) + (originY.current - originY1.current) * Math.sin((Math.PI / 180) * (-cir)) + originX1.current;
         let ltY = (originY.current - originY1.current) * Math.cos(Math.PI / 180 * (-cir)) - (originX.current - originX1.current) * Math.sin(Math.PI / 180 * (-cir)) + originY1.current;
 
-        let rtX = (originX.current + img.width - originX1.current) * Math.cos((Math.PI / 180) * (-cir)) + (originY.current - originY1.current) * Math.sin((Math.PI / 180) * (-cir)) + originX1.current;
-        let rtY = (originY.current - originY1.current) * Math.cos(Math.PI / 180 * (-cir)) - (originX.current + img.width - originX1.current) * Math.sin(Math.PI / 180 * (-cir)) + originY1.current;
+        let rtX = (originX.current + img.width * types - originX1.current) * Math.cos((Math.PI / 180) * (-cir)) + (originY.current - originY1.current) * Math.sin((Math.PI / 180) * (-cir)) + originX1.current;
+        let rtY = (originY.current - originY1.current) * Math.cos(Math.PI / 180 * (-cir)) - (originX.current + img.width * types - originX1.current) * Math.sin(Math.PI / 180 * (-cir)) + originY1.current;
 
-        let rbX = (originX.current + img.width - originX1.current) * Math.cos((Math.PI / 180) * (-cir)) + (originY.current + img.width - originY1.current) * Math.sin((Math.PI / 180) * (-cir)) + originX1.current;
-        let rbY = (originY.current + img.height - originY1.current) * Math.cos(Math.PI / 180 * (-cir)) - (originX.current + img.width - originX1.current) * Math.sin(Math.PI / 180 * (-cir)) + originY1.current;
+        let rbX = (originX.current + img.width * types - originX1.current) * Math.cos((Math.PI / 180) * (-cir)) + (originY.current + img.height * types - originY1.current) * Math.sin((Math.PI / 180) * (-cir)) + originX1.current;
+        let rbY = (originY.current + img.height * types - originY1.current) * Math.cos(Math.PI / 180 * (-cir)) - (originX.current + img.width * types - originX1.current) * Math.sin(Math.PI / 180 * (-cir)) + originY1.current;
 
-        let lbX = (originX.current - originX1.current) * Math.cos((Math.PI / 180) * (-cir)) + (originY.current + img.width - originY1.current) * Math.sin((Math.PI / 180) * (-cir)) + originX1.current;
-        let lbY = (originY.current + img.height - originY1.current) * Math.cos(Math.PI / 180 * (-cir)) - (originX.current - originX1.current) * Math.sin(Math.PI / 180 * (-cir)) + originY1.current;
+        let lbX = (originX.current - originX1.current) * Math.cos((Math.PI / 180) * (-cir)) + (originY.current + img.height * types - originY1.current) * Math.sin((Math.PI / 180) * (-cir)) + originX1.current;
+        let lbY = (originY.current + img.height * types - originY1.current) * Math.cos(Math.PI / 180 * (-cir)) - (originX.current - originX1.current) * Math.sin(Math.PI / 180 * (-cir)) + originY1.current;
         // fabric源码判断点是否在区域内
         const oCoords: any = {
           tl: {
@@ -864,7 +957,7 @@ function App() {
           return xcount;
         };
         let jud = pointBox(point, lines);
-        console.log(jud);
+
         if (jud === 1) {
           if (isDown) {
             ctx_1!.save();
@@ -917,14 +1010,57 @@ function App() {
       };
 
       // 添加控制器功能
-
+      myCanvasDom!.addEventListener('mousemove', (e) => {
+        let x2 = e.offsetX;
+        let y2 = e.offsetY;
+        let jud = judge(originX.current - 5, originY.current - 5, 10, 10, x2, y2);
+        if (jud === 1) {
+          myCanvasDom!.style.cursor = 'nw-resize';
+        };
+        let jud1 = judge(originX.current + img.width / 2 * types - 5, originY.current - 5, 10, 10, x2, y2);
+        if (jud1 === 1) {
+          myCanvasDom!.style.cursor = 'n-resize'
+        };
+        let jud2 = judge(originX.current + img.width / 2 * types - 10, originY.current - 50, 20, 20, x2, y2);
+        if (jud2 === 1) {
+          myCanvasDom!.style.cursor = 'col-resize'
+        };
+        let jud3 = judge(originX.current + img.width * types - 5, originY.current - 5, 10, 10, x2, y2);
+        if (jud3 === 1) {
+          myCanvasDom!.style.cursor = 'ne-resize'
+        };
+        let jud4 = judge(originX.current + img.width * types - 5, originY.current - 5 + img.height / 2 * types, 10, 10, x2, y2);
+        if (jud4 === 1) {
+          myCanvasDom!.style.cursor = 'e-resize'
+        };
+        let jud5 = judge(originX.current + img.width * types + 50, originY.current - 10 + img.height / 2 * types, 20, 20, x2, y2);
+        if (jud5 === 1) {
+          myCanvasDom!.style.cursor = 'row-resize'
+        };
+        let jud6 = judge(originX.current - 5 + img.width * types, originY.current - 5 + img.height * types, 10, 10, x2, y2);
+        if (jud6 === 1) {
+          myCanvasDom!.style.cursor = 'nw-resize'
+        };
+        let jud7 = judge(originX.current - 5 + img.width / 2 * types, originY.current - 5 + img.height * types, 10, 10, x2, y2);
+        if (jud7 === 1) {
+          myCanvasDom!.style.cursor = 's-resize'
+        };
+        let jud8 = judge(originX.current - 5, originY.current - 5 + img.height * types, 10, 10, x2, y2);
+        if (jud8 === 1) {
+          myCanvasDom!.style.cursor = 'sw-resize'
+        };
+        let jud9 = judge(originX.current - 5, originY.current - 5 + img.height / 2 * types, 10, 10, x2, y2);
+        if (jud9 === 1) {
+          myCanvasDom!.style.cursor = 'w-resize'
+        };
+      })
 
       // 吸色功能
       const colorPick = document.getElementById('color');
       const draw = document.getElementById('draw');
       draw!.onclick = function pick(e: any) {
-        const x = e.layerX;
-        const y = e.layerY;
+        const x = e.offsetX;
+        const y = e.offsetY;
         const pixel = ctx!.getImageData(x, y, 1, 1);
         const base = pixel.data;
         const rgba = `rgba(${base[0]}, ${base[1]}, ${base[2]}, ${base[3] / 255})`;
