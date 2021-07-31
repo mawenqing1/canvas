@@ -1,20 +1,7 @@
-import { useRef } from 'react'
 import judge from './judge';
-const canvas = useRef<HTMLCanvasElement>(null);
-  const myCanvas = useRef<HTMLCanvasElement>(null);
-  const canvasClear = useRef<HTMLCanvasElement>(null);
-  const canvasClear_1 = useRef<HTMLCanvasElement>(null);
-  const originX = useRef<number>(0);
-  const originY = useRef<number>(0);
-  const originX1 = useRef<number>(0)
-  const originY1 = useRef<number>(0)
-  const beforeCir = useRef<number>(0);
-
-
-
 
 // 文件图片公共函数
-const drawImg = (ctx: CanvasRenderingContext2D, canvasDom: HTMLCanvasElement, myCanvasDom: HTMLCanvasElement, ctx_1: CanvasRenderingContext2D, canvasClearDom: HTMLCanvasElement, canvasClearDom_1: HTMLCanvasElement, showShadow: boolean, transparency: number, types: number, shadowX: number, shadowY: number, blur: number, shaColor: string, cir: number,pointX:number,pointY:number,shapeX:number,shapeY:number,shadow:boolean) => {
+const drawImg = (ctx: CanvasRenderingContext2D, canvasDom: HTMLCanvasElement, myCanvasDom: HTMLCanvasElement, ctx_1: CanvasRenderingContext2D, canvasClearDom: HTMLCanvasElement, canvasClearDom_1: HTMLCanvasElement, showShadow: boolean, transparency: number, types: number, shadowX: number, shadowY: number, blur: number, shaColor: string, cir: number,pointX:number,pointY:number,shapeX:number,shapeY:number,shadow:boolean,originX: { current: number; },originY: { current: number; },originX1: { current: number; } ,originY1: { current: number; } ,beforeCir: { current: number; }) => {
     let img = new Image();
     // 控制器函数
     const drawFillRect = () => {
@@ -100,7 +87,7 @@ const drawImg = (ctx: CanvasRenderingContext2D, canvasDom: HTMLCanvasElement, my
         // 获取鼠标点击坐标
         let x2 = e.offsetX;
         let y2 = e.offsetY;
-        let jud = judge(originX.current, originY.current, img.width, img.height, x2, y2, cir);
+        let jud = judge(originX.current, originY.current, img.width, img.height, x2, y2, cir,originX1,originY1);
         if (jud === 1) {
           if (isDown) {
             ctx_1!.save();
@@ -142,43 +129,43 @@ const drawImg = (ctx: CanvasRenderingContext2D, canvasDom: HTMLCanvasElement, my
       myCanvasDom!.addEventListener('mousemove', (e) => {
         let x2 = e.offsetX;
         let y2 = e.offsetY;
-        let jud = judge(originX.current - 5, originY.current - 5, 10, 10, x2, y2, cir);
+        let jud = judge(originX.current - 5, originY.current - 5, 10, 10, x2, y2, cir,originX1,originY1);
         if (jud === 1) {
           myCanvasDom!.style.cursor = 'nw-resize';
         };
-        let jud1 = judge(originX.current + img.width / 2 * types - 5, originY.current - 5, 10, 10, x2, y2, cir);
+        let jud1 = judge(originX.current + img.width / 2 * types - 5, originY.current - 5, 10, 10, x2, y2, cir,originX1,originY1);
         if (jud1 === 1) {
           myCanvasDom!.style.cursor = 'n-resize'
         };
-        let jud2 = judge(originX.current + img.width / 2 * types - 10, originY.current - 50, 20, 20, x2, y2, cir);
+        let jud2 = judge(originX.current + img.width / 2 * types - 10, originY.current - 50, 20, 20, x2, y2, cir,originX1,originY1);
         if (jud2 === 1) {
           myCanvasDom!.style.cursor = 'col-resize'
         };
-        let jud3 = judge(originX.current + img.width * types - 5, originY.current - 5, 10, 10, x2, y2, cir);
+        let jud3 = judge(originX.current + img.width * types - 5, originY.current - 5, 10, 10, x2, y2, cir,originX1,originY1);
         if (jud3 === 1) {
           myCanvasDom!.style.cursor = 'ne-resize'
         };
-        let jud4 = judge(originX.current + img.width * types - 5, originY.current - 5 + img.height / 2 * types, 10, 10, x2, y2, cir);
+        let jud4 = judge(originX.current + img.width * types - 5, originY.current - 5 + img.height / 2 * types, 10, 10, x2, y2, cir,originX1,originY1);
         if (jud4 === 1) {
           myCanvasDom!.style.cursor = 'e-resize'
         };
-        let jud5 = judge(originX.current + img.width * types + 50, originY.current - 10 + img.height / 2 * types, 20, 20, x2, y2, cir);
+        let jud5 = judge(originX.current + img.width * types + 50, originY.current - 10 + img.height / 2 * types, 20, 20, x2, y2, cir,originX1,originY1);
         if (jud5 === 1) {
           myCanvasDom!.style.cursor = 'row-resize'
         };
-        let jud6 = judge(originX.current - 5 + img.width * types, originY.current - 5 + img.height * types, 10, 10, x2, y2, cir);
+        let jud6 = judge(originX.current - 5 + img.width * types, originY.current - 5 + img.height * types, 10, 10, x2, y2, cir,originX1,originY1);
         if (jud6 === 1) {
           myCanvasDom!.style.cursor = 'nw-resize'
         };
-        let jud7 = judge(originX.current - 5 + img.width / 2 * types, originY.current - 5 + img.height * types, 10, 10, x2, y2, cir);
+        let jud7 = judge(originX.current - 5 + img.width / 2 * types, originY.current - 5 + img.height * types, 10, 10, x2, y2, cir,originX1,originY1);
         if (jud7 === 1) {
           myCanvasDom!.style.cursor = 's-resize'
         };
-        let jud8 = judge(originX.current - 5, originY.current - 5 + img.height * types, 10, 10, x2, y2, cir);
+        let jud8 = judge(originX.current - 5, originY.current - 5 + img.height * types, 10, 10, x2, y2, cir,originX1,originY1);
         if (jud8 === 1) {
           myCanvasDom!.style.cursor = 'sw-resize'
         };
-        let jud9 = judge(originX.current - 5, originY.current - 5 + img.height / 2 * types, 10, 10, x2, y2, cir);
+        let jud9 = judge(originX.current - 5, originY.current - 5 + img.height / 2 * types, 10, 10, x2, y2, cir,originX1,originY1);
         if (jud9 === 1) {
           myCanvasDom!.style.cursor = 'w-resize'
         };

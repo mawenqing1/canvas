@@ -1,10 +1,7 @@
-  import { useRef } from "react";
-  
-  // 判断点是否在区域内
-  const originX1 = useRef<number>(0);
-  const originY1 = useRef<number>(0);
 
-  const judge = (x1: number, y1: number, width: number, height: number, x2: number, y2: number,cir:number) => {
+
+  const judge = (x1: number, y1: number, width: number, height: number, x2: number, y2: number,cir:number,originX1: { current: number; } ,originY1: { current: number; }) => {
+    
     let ltX = (x1 - originX1.current) * Math.cos((Math.PI / 180) * (-cir)) + (y1 - originY1.current) * Math.sin((Math.PI / 180) * (-cir)) + originX1.current;
     let ltY = (y1 - originY1.current) * Math.cos(Math.PI / 180 * (-cir)) - (x1 - originX1.current) * Math.sin(Math.PI / 180 * (-cir)) + originY1.current;
 

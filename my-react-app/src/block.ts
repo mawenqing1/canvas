@@ -1,14 +1,14 @@
-import { createContext, useRef } from "react";
+import { createContext } from "react";
 const initData = {
-    // canvas: useRef<HTMLCanvasElement>(null),
-    // myCanvas: useRef<HTMLCanvasElement>(null),
-    // canvasClear: useRef<HTMLCanvasElement>(null),
-    // canvasClear_1: useRef<HTMLCanvasElement>(null),
-    // originX: useRef<number>(0),
-    // originY: useRef<number>(0),
-    // originX1: useRef<number>(0),
-    // originY1: useRef<number>(0),
-    // beforeCir: useRef<number>(0),
+    canvas: null,
+    myCanvas: null,
+    canvasClear: null,
+    canvasClear_1: null,
+    originX: 0,
+    originY: 0,
+    originX1: 0,
+    originY1: 0,
+    beforeCir: 0,
     isShow: false,
     colors: "",
     types: 1,
@@ -107,6 +107,8 @@ const reducer = (state: any, action: any) => {
             return { ...state, end: value };
         case "changeLayers":
             return { ...state, layers: value };
+        case "initDate":
+            return { ...state, ...value };
         default:
             return state;
     }
