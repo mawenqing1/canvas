@@ -1,5 +1,5 @@
 import React, { useContext }  from 'react';
-import { ContextData } from "../block";
+import { ContextData } from "../public/block";
 
 function ShapeBox() {
   const { state, dispatch } = useContext<any>(ContextData);
@@ -8,7 +8,7 @@ function ShapeBox() {
       <ul>
         <li>
           <p>切片X</p>
-          <input onChange={(e) => dispatch({type:'changeShapeOffX',value:e.target.value})} type="range" step="0.1" min="1" max="10" defaultValue='10' />
+          <input onChange={(e) => dispatch({type:'changeShapeOffX',value:e.target.value})} type="range" step="0.1" min={1} max={0} defaultValue='10' />
         </li>
         <li>
           <p>切片Y</p>

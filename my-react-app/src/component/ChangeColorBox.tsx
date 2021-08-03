@@ -1,5 +1,5 @@
 import React, { useContext }  from 'react';
-import { ContextData } from "../block";
+import { ContextData } from "../public/block";
 
 function ChangeColorBox() {
   const { state, dispatch } = useContext<any>(ContextData);

@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useReducer } from 'react'
-import { initData, reducer, ContextData } from './block'
+import { initData, reducer, ContextData } from './public/block'
 import './App.less'
 import ChangeComponent from './component/Change'
 import BlockComponent from './component/Block'
@@ -16,19 +16,19 @@ import ShapeBoxComponent from './component/ShapeBox'
 import ChangeDashBoxComponent from './component/ChangeDashBox'
 import ChangeColorBoxComponent from './component/ChangeColorBox'
 import ChangeLayerBoxComponent from './component/ChangeLayerBox'
-import drawRect from './drawRect'
-import drawTriangle from './drawTriangle'
-import drawLine from './drawLine'
-import drawArc from './drawArc'
-import drawCircle from './drawCircle'
-import drawQctwo from './drawQctwo'
-import drawQcthree from './drawQcthree'
-import drawImg from './drawImg'
+import drawRect from './public/drawRect'
+import drawTriangle from './public/drawTriangle'
+import drawLine from './public/drawLine'
+import drawArc from './public/drawArc'
+import drawCircle from './public/drawCircle'
+import drawQctwo from './public/drawQctwo'
+import drawQcthree from './public/drawQcthree'
+import drawImg from './public/drawImg'
 
 function App() {
   const [state, dispatch] = useReducer(reducer, initData);
   const { isShow, show, colors, types, transparency, cir, tile, tex, clear, shadow, shadowX, shadowY, blur, shaColor, align, baseline, textDirection, lwidth, cap, size, fonts, shapeX, shapeY, pointX, pointY, solid, dotted, deviation, start, end, layers} = state;
-
+  
   let canvas = useRef<HTMLCanvasElement>(null);
   let myCanvas = useRef<HTMLCanvasElement>(null);
   let canvasClear = useRef<HTMLCanvasElement>(null);
@@ -38,30 +38,6 @@ function App() {
   let originX1 = useRef<number>(0)
   let originY1 = useRef<number>(0)
   let beforeCir = useRef<number>(0);
-  // 获取全局变量
-  useEffect(() => {
-    dispatch({
-      type: 'initDate',
-      value: {
-        canvas: canvas,
-        myCanvas: myCanvas,
-        canvasClear: canvasClear,
-        canvasClear_1: canvasClear_1,
-        originX: originX,
-        originY: originY,
-        originX1: originX1,
-        originY1: originY1,
-        beforeCir: beforeCir,
-      }
-    })
-  }, [canvas, myCanvas,
-    canvasClear,
-    canvasClear_1,
-    originX,
-    originY,
-    originX1,
-    originY1,
-    beforeCir]);
 
   // 点击显示隐藏阴影透明缩放剪切渐变
   useEffect(() => {
