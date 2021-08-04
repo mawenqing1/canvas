@@ -61,7 +61,7 @@ function Block(): JSX.Element {
           <button onClick={qcthree}>绘制三次贝塞尔曲线</button>
         </li>
         <li>
-          <input type="file" accept="image/*"  placeholder="选择提交的照片" />
+          <input type="file" accept="image/*" id = 'file'  placeholder="选择提交的照片" />
           <button onClick={img} >确认选择/清除图片</button>
         </li>
       </ul>

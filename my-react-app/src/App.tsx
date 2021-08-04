@@ -84,7 +84,13 @@ function App() {
           drawQcthree(ctx!, transparency, types, colors, shadow, shadowX, shadowY, blur, shaColor);
           break;
         case 'img':
-          drawImg(ctx!, canvasDom!, myCanvasDom!, ctx_1!, canvasClearDom!, canvasClearDom_1!, shadow, transparency, types, shadowX, shadowY, blur, shaColor, cir, pointX, pointY, shapeX, shapeY, shadow,originX,originY,originX1,originY1,beforeCir);
+          const callback = (data:any)=>{
+            dispatch({
+              type:'changeState',
+              data
+            })
+          }
+          drawImg(ctx!, canvasDom!, myCanvasDom!, ctx_1!, canvasClearDom!, canvasClearDom_1!,state,originX,originY,originX1,originY1,beforeCir,callback);
           break;
         default:
           return undefined;

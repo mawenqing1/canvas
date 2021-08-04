@@ -1,11 +1,33 @@
 import judge from '../judge';
 import drawFillRect from '../controls/drawFillRect'
 
+interface IProps {
+  showShadow: boolean;
+  transparency: number;
+  types: number;
+  shadowX: number;
+  shadowY: number;
+  blur: number;
+  shaColor: string;
+  cir: number;
+  pointX: number;
+  pointY: number;
+  shapeX: number;
+  shapeY: number;
+  shadow: boolean;
+  imgW:number;
+  imgH:number;
+}
 // 文件图片公共函数
-const drawImg = (ctx: CanvasRenderingContext2D, canvasDom: HTMLCanvasElement, myCanvasDom: HTMLCanvasElement, ctx_1: CanvasRenderingContext2D, canvasClearDom: HTMLCanvasElement, canvasClearDom_1: HTMLCanvasElement, showShadow: boolean, transparency: number, types: number, shadowX: number, shadowY: number, blur: number, shaColor: string, cir: number, pointX: number, pointY: number, shapeX: number, shapeY: number, shadow: boolean, originX: { current: number; }, originY: { current: number; }, originX1: { current: number; }, originY1: { current: number; }, beforeCir: { current: number; }) => {
+const drawImg = (ctx: CanvasRenderingContext2D, canvasDom: HTMLCanvasElement, myCanvasDom: HTMLCanvasElement, ctx_1: CanvasRenderingContext2D, canvasClearDom: HTMLCanvasElement, canvasClearDom_1: HTMLCanvasElement, state: IProps, originX: { current: number; }, originY: { current: number; }, originX1: { current: number; }, originY1: { current: number; }, beforeCir: { current: number; }, callback: (data: any) => void) => {
+  const { shadow, transparency, types, shadowX, shadowY, blur, shaColor, cir, pointX, pointY, shapeX, shapeY, imgW, imgH } = state
   let img = new Image();
+
+
   // 旋转函数
   const imgRotate = () => {
+    const imgWidth = imgW || img.width;
+    const imgHeight = imgH || img.height;
     ctx!.save();
     ctx_1!.save();
     ctx!.clearRect(0, 0, canvasDom!.width, canvasDom!.height);
@@ -16,19 +38,29 @@ const drawImg = (ctx: CanvasRenderingContext2D, canvasDom: HTMLCanvasElement, my
     ctx_1!.rotate(Math.PI / 180 * cir);
     ctx!.translate(-(originX1.current), -(originY1.current));
     ctx_1!.translate(-(originX1.current), -(originY1.current));
-    ctx_1!.strokeRect(originX.current, originY.current, img.width * types, img.height * types);
-    drawFillRect(ctx_1,originX,originY,img.width,img.height,types);
-    ctx!.drawImage(img, originX.current, originY.current, img.width * types, img.height * types);
+    ctx_1!.strokeRect(originX.current, originY.current, imgWidth * types, imgHeight * types);
+    drawFillRect(ctx_1, originX, originY, imgWidth, imgHeight, types);
+    ctx!.drawImage(img, originX.current, originY.current, imgWidth * types, imgHeight * types);
     ctx!.restore();
     ctx_1!.restore();
   };
   // 控制器重绘
   const control = () => {
+    ctx!.save();
+    ctx_1!.save();
     ctx!.clearRect(0, 0, canvasDom!.width, canvasDom!.height);
     ctx_1!.clearRect(0, 0, myCanvasDom!.width, myCanvasDom!.height);
-    ctx_1!.strokeRect(originX.current, originY.current, img.width * types, img.height * types);
-    drawFillRect(ctx_1,originX,originY,img.width,img.height,types);
-    ctx!.drawImage(img, originX.current, originY.current, img.width * types, img.height * types);
+    ctx!.translate(originX1.current, originY1.current);
+    ctx_1!.translate(originX1.current, originY1.current);
+    ctx!.rotate(Math.PI / 180 * cir);
+    ctx_1!.rotate(Math.PI / 180 * cir);
+    ctx!.translate(-(originX1.current), -(originY1.current));
+    ctx_1!.translate(-(originX1.current), -(originY1.current));
+    ctx_1!.strokeRect(originX.current, originY.current, img.width, img.height);
+    drawFillRect(ctx_1, originX, originY, img.width, img.height, types);
+    ctx!.drawImage(img, originX.current, originY.current, img.width, img.height);
+    ctx!.restore();
+    ctx_1!.restore();
   };
 
   let file = document.getElementById("file")!.files[0];
@@ -93,7 +125,7 @@ const drawImg = (ctx: CanvasRenderingContext2D, canvasDom: HTMLCanvasElement, my
           ctx_1!.rotate(Math.PI / 180 * cir);
           ctx_1!.translate(-(originX.current + img.width / 2 * types), -(originY.current + img.height / 2 * types));
           ctx_1!.strokeRect(originX.current, originY.current, img.width * types, img.height * types);
-          drawFillRect(ctx_1,originX,originY,img.width,img.height,types);
+          drawFillRect(ctx_1, originX, originY, img.width, img.height, types);
           ctx_1!.restore();
         }
         myCanvasDom!.onmousemove = (e) => {
@@ -128,25 +160,25 @@ const drawImg = (ctx: CanvasRenderingContext2D, canvasDom: HTMLCanvasElement, my
       let y2 = e.offsetY;
       let jud = judge(originX.current - 5, originY.current - 5, 10, 10, x2, y2, cir, originX1, originY1);
       if (jud === 1) {
-        if(0 <= cir&&cir <= 30 || 150<cir&&cir<= 180 || 330<cir&&cir<=360) {
+        if (0 <= cir && cir <= 30 || 150 < cir && cir <= 180 || 330 < cir && cir <= 360) {
           myCanvasDom!.style.cursor = 'nw-resize';
-        }else if(30 < cir&&cir <= 60 || 180<cir&&cir<= 210  ) {
+        } else if (30 < cir && cir <= 60 || 180 < cir && cir <= 210) {
           myCanvasDom!.style.cursor = 'n-resize';
-        }else if(120<cir&&cir<=150|| 300<cir&&cir<=330) {
+        } else if (120 < cir && cir <= 150 || 300 < cir && cir <= 330) {
           myCanvasDom!.style.cursor = 'e-resize'
-        }else {
+        } else {
           myCanvasDom!.style.cursor = 'ne-resize'
         }
       };
       let jud1 = judge(originX.current + img.width / 2 * types - 5, originY.current - 5, 10, 10, x2, y2, cir, originX1, originY1);
       if (jud1 === 1) {
-        if(0 <= cir&&cir <= 30 || 150<cir&&cir<= 180 || 330<cir&&cir<=360) {
+        if (0 <= cir && cir <= 30 || 150 < cir && cir <= 180 || 330 < cir && cir <= 360) {
           myCanvasDom!.style.cursor = 'n-resize';
-        }else if(30 < cir&&cir <= 60 || 180<cir&&cir<= 210  ) {
+        } else if (30 < cir && cir <= 60 || 180 < cir && cir <= 210) {
           myCanvasDom!.style.cursor = 'w-resize';
-        }else if(120<cir&&cir<=150|| 300<cir&&cir<=330) {
+        } else if (120 < cir && cir <= 150 || 300 < cir && cir <= 330) {
           myCanvasDom!.style.cursor = 's-resize'
-        }else {
+        } else {
           myCanvasDom!.style.cursor = 'w-resize'
         }
       };
@@ -156,25 +188,25 @@ const drawImg = (ctx: CanvasRenderingContext2D, canvasDom: HTMLCanvasElement, my
       };
       let jud3 = judge(originX.current + img.width * types - 5, originY.current - 5, 10, 10, x2, y2, cir, originX1, originY1);
       if (jud3 === 1) {
-        if(0 <= cir&&cir <= 30 || 150<cir&&cir<= 180 || 330<cir&&cir<=360) {
+        if (0 <= cir && cir <= 30 || 150 < cir && cir <= 180 || 330 < cir && cir <= 360) {
           myCanvasDom!.style.cursor = 'ne-resize';
-        }else if(30 < cir&&cir <= 60 || 180<cir&&cir<= 210  ) {
+        } else if (30 < cir && cir <= 60 || 180 < cir && cir <= 210) {
           myCanvasDom!.style.cursor = 'e-resize';
-        }else if(120<cir&&cir<=150|| 300<cir&&cir<=330) {
+        } else if (120 < cir && cir <= 150 || 300 < cir && cir <= 330) {
           myCanvasDom!.style.cursor = 'n-resize'
-        }else {
+        } else {
           myCanvasDom!.style.cursor = 'nw-resize'
         }
       };
       let jud4 = judge(originX.current + img.width * types - 5, originY.current - 5 + img.height / 2 * types, 10, 10, x2, y2, cir, originX1, originY1);
       if (jud4 === 1) {
-        if(0 <= cir&&cir <= 30 || 150<cir&&cir<= 180 || 330<cir&&cir<=360) {
+        if (0 <= cir && cir <= 30 || 150 < cir && cir <= 180 || 330 < cir && cir <= 360) {
           myCanvasDom!.style.cursor = 'e-resize';
-        }else if(30 < cir&&cir <= 60 || 180<cir&&cir<= 210  ) {
+        } else if (30 < cir && cir <= 60 || 180 < cir && cir <= 210) {
           myCanvasDom!.style.cursor = 's-resize';
-        }else if(120<cir&&cir<=150|| 300<cir&&cir<=330) {
+        } else if (120 < cir && cir <= 150 || 300 < cir && cir <= 330) {
           myCanvasDom!.style.cursor = 'w-resize'
-        }else {
+        } else {
           myCanvasDom!.style.cursor = 's-resize'
         }
       };
@@ -184,49 +216,49 @@ const drawImg = (ctx: CanvasRenderingContext2D, canvasDom: HTMLCanvasElement, my
       };
       let jud6 = judge(originX.current - 5 + img.width * types, originY.current - 5 + img.height * types, 10, 10, x2, y2, cir, originX1, originY1);
       if (jud6 === 1) {
-        if(0 <= cir&&cir <= 30 || 150<cir&&cir<= 180 || 330<cir&&cir<=360) {
+        if (0 <= cir && cir <= 30 || 150 < cir && cir <= 180 || 330 < cir && cir <= 360) {
           myCanvasDom!.style.cursor = 'nw-resize';
-        }else if(30 < cir&&cir <= 60 || 180<cir&&cir<= 210  ) {
+        } else if (30 < cir && cir <= 60 || 180 < cir && cir <= 210) {
           myCanvasDom!.style.cursor = 'n-resize';
-        }else if(120<cir&&cir<=150|| 300<cir&&cir<=330) {
+        } else if (120 < cir && cir <= 150 || 300 < cir && cir <= 330) {
           myCanvasDom!.style.cursor = 'e-resize'
-        }else {
+        } else {
           myCanvasDom!.style.cursor = 'ne-resize'
         }
       };
       let jud7 = judge(originX.current - 5 + img.width / 2 * types, originY.current - 5 + img.height * types, 10, 10, x2, y2, cir, originX1, originY1);
       if (jud7 === 1) {
-        if(0 <= cir&&cir <= 30 || 150<cir&&cir<= 180 || 330<cir&&cir<=360) {
+        if (0 <= cir && cir <= 30 || 150 < cir && cir <= 180 || 330 < cir && cir <= 360) {
           myCanvasDom!.style.cursor = 's-resize';
-        }else if(30 < cir&&cir <= 60 || 180<cir&&cir<= 210  ) {
+        } else if (30 < cir && cir <= 60 || 180 < cir && cir <= 210) {
           myCanvasDom!.style.cursor = 'w-resize';
-        }else if(120<cir&&cir<=150|| 300<cir&&cir<=330) {
+        } else if (120 < cir && cir <= 150 || 300 < cir && cir <= 330) {
           myCanvasDom!.style.cursor = 's-resize'
-        }else {
+        } else {
           myCanvasDom!.style.cursor = 'w-resize'
         }
       };
       let jud8 = judge(originX.current - 5, originY.current - 5 + img.height * types, 10, 10, x2, y2, cir, originX1, originY1);
       if (jud8 === 1) {
-        if(0 <= cir&&cir <= 30 || 150<cir&&cir<= 180 || 330<cir&&cir<=360) {
+        if (0 <= cir && cir <= 30 || 150 < cir && cir <= 180 || 330 < cir && cir <= 360) {
           myCanvasDom!.style.cursor = 'sw-resize';
-        }else if(30 < cir&&cir <= 60 || 180<cir&&cir<= 210  ) {
+        } else if (30 < cir && cir <= 60 || 180 < cir && cir <= 210) {
           myCanvasDom!.style.cursor = 'w-resize';
-        }else if(120<cir&&cir<=150|| 300<cir&&cir<=330) {
+        } else if (120 < cir && cir <= 150 || 300 < cir && cir <= 330) {
           myCanvasDom!.style.cursor = 'n-resize'
-        }else {
+        } else {
           myCanvasDom!.style.cursor = 'nw-resize'
         }
       };
       let jud9 = judge(originX.current - 5, originY.current - 5 + img.height / 2 * types, 10, 10, x2, y2, cir, originX1, originY1);
       if (jud9 === 1) {
-        if(0 <= cir&&cir <= 30 || 150<cir&&cir<= 180 || 330<cir&&cir<=360) {
+        if (0 <= cir && cir <= 30 || 150 < cir && cir <= 180 || 330 < cir && cir <= 360) {
           myCanvasDom!.style.cursor = 'w-resize';
-        }else if(30 < cir&&cir <= 60 || 180<cir&&cir<= 210  ) {
+        } else if (30 < cir && cir <= 60 || 180 < cir && cir <= 210) {
           myCanvasDom!.style.cursor = 's-resize';
-        }else if(120<cir&&cir<=150|| 300<cir&&cir<=330) {
+        } else if (120 < cir && cir <= 150 || 300 < cir && cir <= 330) {
           myCanvasDom!.style.cursor = 'w-resize'
-        }else {
+        } else {
           myCanvasDom!.style.cursor = 's-resize'
         }
       };
@@ -268,11 +300,38 @@ const drawImg = (ctx: CanvasRenderingContext2D, canvasDom: HTMLCanvasElement, my
       let jud = judge(originX.current - 5, originY.current - 5, 10, 10, x2, y2, cir, originX1, originY1);
       if (jud === 1) {
         myCanvasDom!.onmousemove = (e) => {
-          originX.current = e.movementX + originX.current;
-          originY.current = e.movementY + originY.current;
-          img.width += -e.movementX;
-          img.height += -e.movementY;
-          control();
+          console.log(cir);
+
+          if (0 <= cir && cir <= 60 || 300 < cir && cir <= 360) {
+            let scale = (e.movementX + e.movementY) / 2;
+            originX.current = scale + originX.current;
+            originY.current = scale + originY.current;
+            img.width += -scale * 2;
+            img.height += -scale * 2;
+            callback({ imgW: img.width, imgH: img.height })
+            control();
+          } else if (60 < cir && cir <= 120) {
+            let scale = (e.movementX - e.movementY) / 2;
+            originY.current = -scale + originY.current;
+            originX.current = -scale + originX.current;
+            img.width += scale * 2;
+            img.height += scale * 2;
+            control();
+          } else if (120 < cir && cir <= 190) {
+            let scale = (e.movementX + e.movementY) / 2;
+            originY.current = -scale + originY.current;
+            originX.current = -scale + originX.current;
+            img.width += scale * 2;
+            img.height += scale * 2;
+            control();
+          } else {
+            let scale = (e.movementX - e.movementY) / 2;
+            originX.current = scale + originX.current;
+            originY.current = scale + originY.current;
+            img.width += -scale * 2;
+            img.height += -scale * 2;
+            control();
+          }
         }
       };
       let jud1 = judge(originX.current + img.width / 2 * types - 5, originY.current - 5, 10, 10, x2, y2, cir, originX1, originY1);
@@ -286,9 +345,11 @@ const drawImg = (ctx: CanvasRenderingContext2D, canvasDom: HTMLCanvasElement, my
       let jud3 = judge(originX.current + img.width * types - 5, originY.current - 5, 10, 10, x2, y2, cir, originX1, originY1);
       if (jud3 === 1) {
         myCanvasDom!.onmousemove = (e) => {
-          originY.current = e.movementY + originY.current;
-          img.width += e.movementX;
-          img.height += -e.movementY;
+          let scale = (e.movementX - e.movementY) / 2;
+          originY.current = -scale + originY.current;
+          originX.current = -scale + originX.current;
+          img.width += scale * 2;
+          img.height += scale * 2;
           control();
         }
       };
@@ -302,8 +363,11 @@ const drawImg = (ctx: CanvasRenderingContext2D, canvasDom: HTMLCanvasElement, my
       let jud6 = judge(originX.current - 5 + img.width * types, originY.current - 5 + img.height * types, 10, 10, x2, y2, cir, originX1, originY1);
       if (jud6 === 1) {
         myCanvasDom!.onmousemove = (e) => {
-          img.width += e.movementX;
-          img.height += e.movementY;
+          let scale = (e.movementX + e.movementY) / 2;
+          originY.current = -scale + originY.current;
+          originX.current = -scale + originX.current;
+          img.width += scale * 2;
+          img.height += scale * 2;
           control();
         }
       };
@@ -317,9 +381,11 @@ const drawImg = (ctx: CanvasRenderingContext2D, canvasDom: HTMLCanvasElement, my
       let jud8 = judge(originX.current - 5, originY.current - 5 + img.height * types, 10, 10, x2, y2, cir, originX1, originY1);
       if (jud8 === 1) {
         myCanvasDom!.onmousemove = (e) => {
-          originX.current = e.movementX + originX.current;
-          img.width += -e.movementX;
-          img.height += e.movementY;
+          let scale = (e.movementX - e.movementY) / 2;
+          originX.current = scale + originX.current;
+          originY.current = scale + originY.current;
+          img.width += -scale * 2;
+          img.height += -scale * 2;
           control();
         }
       };

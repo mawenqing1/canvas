@@ -39,6 +39,8 @@ const initData = {
     start: "black",
     end: "black",
     layers: "",
+    imgW:0,
+    imgH:0
 }; //初始数据
 
 // 派发事件
