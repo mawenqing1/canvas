@@ -15,19 +15,20 @@ interface IProps {
   shapeX: number;
   shapeY: number;
   shadow: boolean;
-  imgW:number;
-  imgH:number;
+  imgW: number;
+  imgH: number;
 }
 // 文件图片公共函数
 const drawImg = (ctx: CanvasRenderingContext2D, canvasDom: HTMLCanvasElement, myCanvasDom: HTMLCanvasElement, ctx_1: CanvasRenderingContext2D, canvasClearDom: HTMLCanvasElement, canvasClearDom_1: HTMLCanvasElement, state: IProps, originX: { current: number; }, originY: { current: number; }, originX1: { current: number; }, originY1: { current: number; }, beforeCir: { current: number; }, callback: (data: any) => void) => {
   const { shadow, transparency, types, shadowX, shadowY, blur, shaColor, cir, pointX, pointY, shapeX, shapeY, imgW, imgH } = state
   let img = new Image();
-
+  let imgWidth = imgW || img.width;
+  let imgHeight = imgH || img.height;
 
   // 旋转函数
   const imgRotate = () => {
-    const imgWidth = imgW || img.width;
-    const imgHeight = imgH || img.height;
+    imgWidth = imgWidth ? imgWidth : imgW || img.width;
+    imgHeight = imgHeight ? imgHeight : imgH || img.height;
     ctx!.save();
     ctx_1!.save();
     ctx!.clearRect(0, 0, canvasDom!.width, canvasDom!.height);
@@ -45,7 +46,7 @@ const drawImg = (ctx: CanvasRenderingContext2D, canvasDom: HTMLCanvasElement, my
     ctx_1!.restore();
   };
   // 控制器重绘
-  const control = () => {
+  const control = (imgWidth: number, imgHeight: number) => {
     ctx!.save();
     ctx_1!.save();
     ctx!.clearRect(0, 0, canvasDom!.width, canvasDom!.height);
@@ -56,9 +57,9 @@ const drawImg = (ctx: CanvasRenderingContext2D, canvasDom: HTMLCanvasElement, my
     ctx_1!.rotate(Math.PI / 180 * cir);
     ctx!.translate(-(originX1.current), -(originY1.current));
     ctx_1!.translate(-(originX1.current), -(originY1.current));
-    ctx_1!.strokeRect(originX.current, originY.current, img.width, img.height);
-    drawFillRect(ctx_1, originX, originY, img.width, img.height, types);
-    ctx!.drawImage(img, originX.current, originY.current, img.width, img.height);
+    ctx_1!.strokeRect(originX.current, originY.current, imgWidth, imgHeight);
+    drawFillRect(ctx_1, originX, originY, imgWidth, imgHeight, types);
+    ctx!.drawImage(img, originX.current, originY.current, imgWidth, imgHeight);
     ctx!.restore();
     ctx_1!.restore();
   };
@@ -116,25 +117,26 @@ const drawImg = (ctx: CanvasRenderingContext2D, canvasDom: HTMLCanvasElement, my
       // 获取鼠标点击坐标
       let x2 = e.offsetX;
       let y2 = e.offsetY;
-      let jud = judge(originX.current, originY.current, img.width, img.height, x2, y2, cir, originX1, originY1);
+      let jud = judge(originX.current, originY.current, imgWidth, imgHeight, x2, y2, cir, originX1, originY1);
       if (jud === 1) {
         if (isDown) {
           ctx_1!.save();
           ctx_1!.clearRect(0, 0, myCanvasDom!.width, myCanvasDom!.height);
-          ctx_1!.translate(originX.current + img.width / 2 * types, originY.current + img.height / 2 * types);
+          ctx_1!.translate(originX.current + imgWidth / 2 * types, originY.current + imgHeight / 2 * types);
           ctx_1!.rotate(Math.PI / 180 * cir);
-          ctx_1!.translate(-(originX.current + img.width / 2 * types), -(originY.current + img.height / 2 * types));
-          ctx_1!.strokeRect(originX.current, originY.current, img.width * types, img.height * types);
-          drawFillRect(ctx_1, originX, originY, img.width, img.height, types);
+          ctx_1!.translate(-(originX.current + imgWidth / 2 * types), -(originY.current + imgHeight / 2 * types));
+          ctx_1!.strokeRect(originX.current, originY.current, imgWidth * types, imgHeight * types);
+          drawFillRect(ctx_1, originX, originY, imgWidth, imgHeight, types);
           ctx_1!.restore();
         }
         myCanvasDom!.onmousemove = (e) => {
           isDown = false;
           originX.current = e.movementX + originX.current;
           originY.current = e.movementY + originY.current;
-          originX1.current = originX.current + img.width / 2;
-          originY1.current = originY.current + img.height / 2;
+          originX1.current = originX.current + imgWidth / 2;
+          originY1.current = originY.current + imgHeight / 2;
           ctx!.globalAlpha = transparency;
+          console.log(imgWidth);
           imgRotate();
         }
       };
@@ -296,20 +298,19 @@ const drawImg = (ctx: CanvasRenderingContext2D, canvasDom: HTMLCanvasElement, my
     myCanvasDom!.addEventListener('mousedown', (e) => {
       let x2 = e.offsetX;
       let y2 = e.offsetY;
-
+      imgWidth = imgWidth ? imgWidth : imgW || img.width;
+      imgHeight = imgHeight ? imgHeight : imgH || img.height;
       let jud = judge(originX.current - 5, originY.current - 5, 10, 10, x2, y2, cir, originX1, originY1);
       if (jud === 1) {
         myCanvasDom!.onmousemove = (e) => {
-          console.log(cir);
-
           if (0 <= cir && cir <= 60 || 300 < cir && cir <= 360) {
             let scale = (e.movementX + e.movementY) / 2;
             originX.current = scale + originX.current;
             originY.current = scale + originY.current;
-            img.width += -scale * 2;
-            img.height += -scale * 2;
-            callback({ imgW: img.width, imgH: img.height })
-            control();
+            imgWidth += -scale * 2;
+            imgHeight += -scale * 2;
+            callback({ imgW: imgWidth, imgH: imgHeight })
+            control(imgWidth, imgHeight);
           } else if (60 < cir && cir <= 120) {
             let scale = (e.movementX - e.movementY) / 2;
             originY.current = -scale + originY.current;
