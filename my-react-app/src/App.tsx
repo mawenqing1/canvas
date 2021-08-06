@@ -84,7 +84,7 @@ function App() {
           drawQcthree(ctx!, transparency, types, colors, shadow, shadowX, shadowY, blur, shaColor);
           break;
         case 'img':
-          const callback = (data:any)=>{
+          const callback = (data:number)=>{
             dispatch({
               type:'changeState',
               data
