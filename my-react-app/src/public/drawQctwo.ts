@@ -1,5 +1,7 @@
+import {Qcthree} from '../interface/interface'
+ 
  // 绘制二次贝塞尔曲线
- const drawQctwo = (ctx: CanvasRenderingContext2D, transparency: number, types: number, colors: string, shadow: boolean, shadowX: number, shadowY: number, blur: number, shaColor: string) => {
+ const drawQctwo = ({ctx, transparency, types, colors, shadow, shadowX, shadowY, blur, shaColor}:Qcthree) => {
     if (shadow) {
       ctx.shadowOffsetX = shadowX;
       ctx.shadowOffsetY = shadowY;

@@ -1,5 +1,7 @@
- // 绘制圆弧公共函数
- const drawArc = (ctx: CanvasRenderingContext2D, transparency: number, types: number, colors: string, shadow: boolean, shadowX: number, shadowY: number, blur: number, shaColor: string) => {
+import{Arc} from '../interface/interface'
+
+// 绘制圆弧公共函数
+ const drawArc = ({ctx, transparency, types, colors, shadow, shadowX, shadowY, blur, shaColor}:Arc) => {
     if (shadow) {
       ctx.shadowOffsetX = shadowX;
       ctx.shadowOffsetY = shadowY;

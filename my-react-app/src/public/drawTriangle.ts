@@ -1,5 +1,7 @@
- // 绘制三角公共函数
- const drawTriangle = (ctx: CanvasRenderingContext2D, transparency: number, types: number, colors: string, shadow: boolean, shadowX: number, shadowY: number, blur: number, shaColor: string, start: string, end: string,layers: string) => {
+import {Rect} from '../interface/interface'
+
+// 绘制三角公共函数
+ const drawTriangle = ({ctx, transparency, types, colors, shadow, shadowX, shadowY, blur, shaColor, start, end,layers}:Rect) => {
     if (shadow) {
       ctx.shadowOffsetX = shadowX;
       ctx.shadowOffsetY = shadowY;

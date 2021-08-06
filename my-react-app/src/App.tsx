@@ -27,8 +27,8 @@ import drawImg from './public/drawImg'
 
 function App() {
   const [state, dispatch] = useReducer(reducer, initData);
-  const { isShow, show, colors, types, transparency, cir, tile, tex, clear, shadow, shadowX, shadowY, blur, shaColor, align, baseline, textDirection, lwidth, cap, size, fonts, shapeX, shapeY, pointX, pointY, solid, dotted, deviation, start, end, layers} = state;
-  
+  const { isShow, show, colors, types, transparency, cir, tile, tex, clear, shadow, shadowX, shadowY, blur, shaColor, align, baseline, textDirection, lwidth, cap, size, fonts, shapeX, shapeY, pointX, pointY, solid, dotted, deviation, start, end, layers } = state;
+
   let canvas = useRef<HTMLCanvasElement>(null);
   let myCanvas = useRef<HTMLCanvasElement>(null);
   let canvasClear = useRef<HTMLCanvasElement>(null);
@@ -60,42 +60,54 @@ function App() {
     if (isShow) {
       switch (show) {
         case 'rect':
-          drawRect(ctx!, transparency, types, colors, shadow, shadowX, shadowY, blur, shaColor, start, end, layers);
-
+          if(ctx) {
+            drawRect(ctx, transparency, types, colors, shadow, shadowX, shadowY, blur, shaColor, start, end, layers);
+          };
           break;
         case 'triangle':
-          drawTriangle(ctx!, transparency, types, colors, shadow, shadowX, shadowY, blur, shaColor, start, end, layers);
-
+          if(ctx) {
+            drawTriangle(ctx, transparency, types, colors, shadow, shadowX, shadowY, blur, shaColor, start, end, layers);
+          };
           break;
         case 'circle':
-          drawCircle(ctx!, transparency, types, colors, shadow, shadowX, shadowY, blur, shaColor, start, end, layers);
-
+          if(ctx) {
+            drawCircle(ctx!, transparency, types, colors, shadow, shadowX, shadowY, blur, shaColor, start, end, layers);
+          };
           break;
         case 'line':
-          drawLine(ctx!, transparency, types, colors, shadow, shadowX, shadowY, blur, shaColor, lwidth, cap, solid, dotted, deviation);
+          if(ctx) {
+            drawLine(ctx, transparency, types, colors, shadow, shadowX, shadowY, blur, shaColor, lwidth, cap, solid, dotted, deviation);
+          };
           break;
         case 'arc':
-          drawArc(ctx!, transparency, types, colors, shadow, shadowX, shadowY, blur, shaColor);
+          if(ctx) {
+            drawArc(ctx, transparency, types, colors, shadow, shadowX, shadowY, blur, shaColor);
+          };
           break;
         case 'qctwo':
-          drawQctwo(ctx!, transparency, types, colors, shadow, shadowX, shadowY, blur, shaColor);
+          if(ctx) {
+            drawQctwo(ctx, transparency, types, colors, shadow, shadowX, shadowY, blur, shaColor);
+          };
           break;
         case 'qcthree':
-          drawQcthree(ctx!, transparency, types, colors, shadow, shadowX, shadowY, blur, shaColor);
+          if(ctx) {
+            drawQcthree(ctx, transparency, types, colors, shadow, shadowX, shadowY, blur, shaColor);
+          };
           break;
         case 'img':
-          const callback = (data:number)=>{
+          const callback = (data: { imgW: number, imgH: number }) => {
             dispatch({
-              type:'changeState',
+              type: 'changeState',
               data
             })
           }
-          drawImg(ctx!, canvasDom!, myCanvasDom!, ctx_1!, canvasClearDom!, canvasClearDom_1!,state,originX,originY,originX1,originY1,beforeCir,callback);
+          if (ctx && canvasDom && myCanvasDom && ctx_1 && canvasClearDom && canvasClearDom_1) {
+            drawImg({ ctx, canvasDom, myCanvasDom, ctx_1, canvasClearDom, canvasClearDom_1, state, originX, originY, originX1, originY1, beforeCir, callback })
+          };
           break;
         default:
           return undefined;
       }
-
     } else {
       ctx!.clearRect(0, 0, canvasDom!.width, canvasDom!.height);
     }
@@ -112,7 +124,13 @@ function App() {
       ctx!.clearRect(0, 0, canvasDom!.width, canvasDom!.height);
       ctx_1!.clearRect(0, 0, myCanvasDom!.width, myCanvasDom!.height);
       let img = new Image();
-      let file = document.getElementById("file")!.files[0];
+      const fileDom = document.getElementById('file') as HTMLInputElement;
+
+      if (!fileDom || !fileDom.files || !fileDom.files.length) {
+        return
+      };
+
+      const file = fileDom.files[0]
       let reader = new FileReader();
       reader.readAsDataURL(file);
       reader.onload = function () {

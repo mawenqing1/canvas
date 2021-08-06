@@ -1,5 +1,6 @@
 import { createContext } from "react";
-const initData = {
+import {Block} from '../interface/interface'
+const initData:Block = {
     canvas: null,
     myCanvas: null,
     canvasClear: null,

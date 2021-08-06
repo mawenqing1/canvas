@@ -1,43 +1,11 @@
 import judge from '../judge';
 import drawFillRect from '../controls/drawFillRect'
+import {IProps,Img} from '../interface/interface'
 
-interface IProps {
-  showShadow: boolean;
-  transparency: number;
-  types: number;
-  shadowX: number;
-  shadowY: number;
-  blur: number;
-  shaColor: string;
-  cir: number;
-  pointX: number;
-  pointY: number;
-  shapeX: number;
-  shapeY: number;
-  shadow: boolean;
-  imgW: number;
-  imgH: number;
-};
-
-interface Img {
-  ctx: CanvasRenderingContext2D;
-  canvasDom: HTMLCanvasElement;
-  myCanvasDom: HTMLCanvasElement;
-  ctx_1: CanvasRenderingContext2D;
-  canvasClearDom: HTMLCanvasElement;
-  canvasClearDom_1: HTMLCanvasElement;
-  state: IProps;
-  originX: { current: number; };
-  originY: { current: number; };
-  originX1: { current: number; };
-  originY1: { current: number; };
-  beforeCir: { current: number; };
-  callback: (data: { imgW: number, imgH: number }) => void
-}
 
 // 文件图片公共函数
 const drawImg = ({ ctx, canvasDom, myCanvasDom, ctx_1, canvasClearDom, canvasClearDom_1, state, originX, originY, originX1, originY1, beforeCir, callback }: Img) => {
-  const { shadow, transparency, types, shadowX, shadowY, blur, shaColor, cir, pointX, pointY, shapeX, shapeY, imgW, imgH } = state
+  const { shadow, transparency, types, shadowX, shadowY, blur, shaColor, cir, pointX, pointY, shapeX, shapeY, imgW, imgH }:IProps = state
   let img = new Image();
   let imgWidth = imgW || img.width;
   let imgHeight = imgH || img.height;
@@ -82,10 +50,13 @@ const drawImg = ({ ctx, canvasDom, myCanvasDom, ctx_1, canvasClearDom, canvasCle
     ctx_1!.restore();
   };
 
-  let file = document.getElementById("file")!.files[0];
-  if (!file) {
-    return;
-  }
+  const fileDom = document.getElementById('file') as HTMLInputElement;
+
+  if (!fileDom || !fileDom.files || !fileDom.files.length) {
+    return
+  };
+
+  const file = fileDom.files[0]
   // 采用fileReader构造器将上传图片转化为64位编码
   let reader = new FileReader();
   reader.readAsDataURL(file);
@@ -99,10 +70,10 @@ const drawImg = ({ ctx, canvasDom, myCanvasDom, ctx_1, canvasClearDom, canvasCle
       ctx!.closePath();
       ctx!.clip();
       if (shadow) {
-        ctx.shadowOffsetX = shadowX;
-        ctx.shadowOffsetY = shadowY;
-        ctx.shadowBlur = blur;
-        ctx.shadowColor = shaColor;
+        ctx!.shadowOffsetX = shadowX;
+        ctx!.shadowOffsetY = shadowY;
+        ctx!.shadowBlur = blur;
+        ctx!.shadowColor = shaColor;
       };
       img.style.display = 'none';
       ctx!.restore();

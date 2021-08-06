@@ -1,5 +1,7 @@
+import {Rect} from '../interface/interface'
+
 // 绘制矩形公共函数
-const drawRect = (ctx: CanvasRenderingContext2D, transparency: number, types: number, colors: string, shadow: boolean, shadowX: number, shadowY: number, blur: number, shaColor: string, start: string, end: string, layers: string) => {
+const drawRect = ({ctx, transparency, types, colors, shadow, shadowX, shadowY, blur, shaColor, start, end, layers}:Rect) => {
     if (shadow) {
       ctx.shadowOffsetX = shadowX;
       ctx.shadowOffsetY = shadowY;

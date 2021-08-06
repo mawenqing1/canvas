@@ -1,7 +1,9 @@
+import {Line} from '../interface/interface'
+  
   // 绘制线条公共函数
   type Cap = "butt" | "round" | "square";
 
-  const drawLine = (ctx: CanvasRenderingContext2D, transparency: number, types: number, colors: string, shadow: boolean, shadowX: number, shadowY: number, blur: number, shaColor: string, lwidth: number, cap: Cap, solid: number, dotted: number, deviation: number) => {
+  const drawLine = ({ctx, transparency, types, colors, shadow, shadowX, shadowY, blur, shaColor, lwidth, cap, solid, dotted, deviation}:Line) => {
     if (shadow) {
       ctx.shadowOffsetX = shadowX;
       ctx.shadowOffsetY = shadowY;

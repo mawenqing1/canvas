@@ -1,5 +1,7 @@
-  // 绘制三次贝塞尔曲线
-  const drawQcthree = (ctx: CanvasRenderingContext2D, transparency: number, types: number, colors: string, shadow: boolean, shadowX: number, shadowY: number, blur: number, shaColor: string) => {
+import {Qcthree} from '../interface/interface'
+
+// 绘制三次贝塞尔曲线
+  const drawQcthree = ({ctx, transparency, types, colors, shadow, shadowX, shadowY, blur, shaColor}:Qcthree) => {
     if (shadow) {
       ctx.shadowOffsetX = shadowX;
       ctx.shadowOffsetY = shadowY;
