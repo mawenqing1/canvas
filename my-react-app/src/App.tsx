@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useReducer } from 'react'
-import { initData, reducer, ContextData } from './public/block'
+import { initData, reducer, ContextData } from './public/initData'
 import './App.less'
 import ChangeComponent from './component/Change'
 import BlockComponent from './component/Block'

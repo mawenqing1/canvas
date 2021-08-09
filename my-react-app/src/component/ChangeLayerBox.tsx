@@ -1,5 +1,5 @@
 import React, { useContext }  from 'react';
-import { ContextData } from "../public/block";
+import { ContextData } from "../public/initData";
 
 function ChangeLayerBox() {
   const { state, dispatch } = useContext<any>(ContextData);

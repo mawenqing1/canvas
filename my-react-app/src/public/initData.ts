@@ -45,7 +45,7 @@ const initData:Block = {
 }; //初始数据
 
 // 派发事件
-const reducer = (state: any, action: any) => {
+const reducer = (state: Block, action: any) => {
     const { type, value } = action;
     switch (type) {
         case "changeState":

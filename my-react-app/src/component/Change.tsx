@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { ContextData } from "../public/block";
+import { ContextData } from "../public/initData";
 
 function Change(): JSX.Element {
     const { state, dispatch } = useContext<any>(ContextData);
