@@ -149,4 +149,13 @@ interface Qcthree {
     layers: string
   };
 
-export type { IProps, Img, Block, Arc, Circle, Line, Qcthree, Rect, };
+  interface controls {
+    ctx_1: CanvasRenderingContext2D;
+    originX: { current: number; }; 
+    originY: { current: number; };
+    imgWidth: number;
+    imgHeight: number;
+    types:number
+   };
+
+export type { IProps, Img, Block, Arc, Circle, Line, Qcthree, Rect, controls };

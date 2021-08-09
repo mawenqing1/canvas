@@ -61,37 +61,37 @@ function App() {
       switch (show) {
         case 'rect':
           if(ctx) {
-            drawRect(ctx, transparency, types, colors, shadow, shadowX, shadowY, blur, shaColor, start, end, layers);
+            drawRect({ctx, transparency, types, colors, shadow, shadowX, shadowY, blur, shaColor, start, end, layers});
           };
           break;
         case 'triangle':
           if(ctx) {
-            drawTriangle(ctx, transparency, types, colors, shadow, shadowX, shadowY, blur, shaColor, start, end, layers);
+            drawTriangle({ctx, transparency, types, colors, shadow, shadowX, shadowY, blur, shaColor, start, end, layers});
           };
           break;
         case 'circle':
           if(ctx) {
-            drawCircle(ctx!, transparency, types, colors, shadow, shadowX, shadowY, blur, shaColor, start, end, layers);
+            drawCircle({ctx, transparency, types, colors, shadow, shadowX, shadowY, blur, shaColor, start, end, layers});
           };
           break;
         case 'line':
           if(ctx) {
-            drawLine(ctx, transparency, types, colors, shadow, shadowX, shadowY, blur, shaColor, lwidth, cap, solid, dotted, deviation);
+            drawLine({ctx, transparency, types, colors, shadow, shadowX, shadowY, blur, shaColor, lwidth, cap, solid, dotted, deviation});
           };
           break;
         case 'arc':
           if(ctx) {
-            drawArc(ctx, transparency, types, colors, shadow, shadowX, shadowY, blur, shaColor);
+            drawArc({ctx, transparency, types, colors, shadow, shadowX, shadowY, blur, shaColor});
           };
           break;
         case 'qctwo':
           if(ctx) {
-            drawQctwo(ctx, transparency, types, colors, shadow, shadowX, shadowY, blur, shaColor);
+            drawQctwo({ctx, transparency, types, colors, shadow, shadowX, shadowY, blur, shaColor});
           };
           break;
         case 'qcthree':
           if(ctx) {
-            drawQcthree(ctx, transparency, types, colors, shadow, shadowX, shadowY, blur, shaColor);
+            drawQcthree({ctx, transparency, types, colors, shadow, shadowX, shadowY, blur, shaColor});
           };
           break;
         case 'img':

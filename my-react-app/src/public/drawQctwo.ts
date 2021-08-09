@@ -8,8 +8,8 @@ import {Qcthree} from '../interface/interface'
       ctx.shadowBlur = blur;
       ctx.shadowColor = shaColor;
     };
-    ctx!.globalAlpha = transparency;
-    ctx!.fillStyle = colors;
+    ctx.globalAlpha = transparency;
+    ctx.fillStyle = colors;
     ctx.beginPath();
     ctx.moveTo(75, 25);
     ctx.quadraticCurveTo(25 * types, 25 * types, 25 * types, 62.5 * types);

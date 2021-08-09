@@ -14,40 +14,40 @@ const drawImg = ({ ctx, canvasDom, myCanvasDom, ctx_1, canvasClearDom, canvasCle
   const imgRotate = () => {
     imgWidth = imgWidth ? imgWidth : imgW || img.width;
     imgHeight = imgHeight ? imgHeight : imgH || img.height;
-    ctx!.save();
-    ctx_1!.save();
-    ctx!.clearRect(0, 0, canvasDom!.width, canvasDom!.height);
-    ctx_1!.clearRect(0, 0, myCanvasDom!.width, myCanvasDom!.height);
-    ctx!.translate(originX1.current, originY1.current);
-    ctx_1!.translate(originX1.current, originY1.current);
-    ctx!.rotate(Math.PI / 180 * cir);
-    ctx_1!.rotate(Math.PI / 180 * cir);
-    ctx!.translate(-(originX1.current), -(originY1.current));
-    ctx_1!.translate(-(originX1.current), -(originY1.current));
-    ctx_1!.strokeRect(originX.current, originY.current, imgWidth * types, imgHeight * types);
-    drawFillRect(ctx_1, originX, originY, imgWidth, imgHeight, types);
-    ctx!.drawImage(img, originX.current, originY.current, imgWidth * types, imgHeight * types);
-    ctx!.restore();
-    ctx_1!.restore();
+    ctx.save();
+    ctx_1.save();
+    ctx.clearRect(0, 0, canvasDom!.width, canvasDom!.height);
+    ctx_1.clearRect(0, 0, myCanvasDom!.width, myCanvasDom!.height);
+    ctx.translate(originX1.current, originY1.current);
+    ctx_1.translate(originX1.current, originY1.current);
+    ctx.rotate(Math.PI / 180 * cir);
+    ctx_1.rotate(Math.PI / 180 * cir);
+    ctx.translate(-(originX1.current), -(originY1.current));
+    ctx_1.translate(-(originX1.current), -(originY1.current));
+    ctx_1.strokeRect(originX.current, originY.current, imgWidth * types, imgHeight * types);
+    drawFillRect({ctx_1, originX, originY, imgWidth, imgHeight, types});
+    ctx.drawImage(img, originX.current, originY.current, imgWidth * types, imgHeight * types);
+    ctx.restore();
+    ctx_1.restore();
   };
 
   // 控制器重绘
   const control = (imgWidth: number, imgHeight: number) => {
-    ctx!.save();
-    ctx_1!.save();
-    ctx!.clearRect(0, 0, canvasDom!.width, canvasDom!.height);
-    ctx_1!.clearRect(0, 0, myCanvasDom!.width, myCanvasDom!.height);
-    ctx!.translate(originX1.current, originY1.current);
-    ctx_1!.translate(originX1.current, originY1.current);
-    ctx!.rotate(Math.PI / 180 * cir);
-    ctx_1!.rotate(Math.PI / 180 * cir);
-    ctx!.translate(-(originX1.current), -(originY1.current));
-    ctx_1!.translate(-(originX1.current), -(originY1.current));
-    ctx_1!.strokeRect(originX.current, originY.current, imgWidth, imgHeight);
-    drawFillRect(ctx_1, originX, originY, imgWidth, imgHeight, types);
-    ctx!.drawImage(img, originX.current, originY.current, imgWidth, imgHeight);
-    ctx!.restore();
-    ctx_1!.restore();
+    ctx.save();
+    ctx_1.save();
+    ctx.clearRect(0, 0, canvasDom!.width, canvasDom!.height);
+    ctx_1.clearRect(0, 0, myCanvasDom!.width, myCanvasDom!.height);
+    ctx.translate(originX1.current, originY1.current);
+    ctx_1.translate(originX1.current, originY1.current);
+    ctx.rotate(Math.PI / 180 * cir);
+    ctx_1.rotate(Math.PI / 180 * cir);
+    ctx.translate(-(originX1.current), -(originY1.current));
+    ctx_1.translate(-(originX1.current), -(originY1.current));
+    ctx_1.strokeRect(originX.current, originY.current, imgWidth, imgHeight);
+    drawFillRect({ctx_1, originX, originY, imgWidth, imgHeight, types});
+    ctx.drawImage(img, originX.current, originY.current, imgWidth, imgHeight);
+    ctx.restore();
+    ctx_1.restore();
   };
 
   const fileDom = document.getElementById('file') as HTMLInputElement;
@@ -64,21 +64,21 @@ const drawImg = ({ ctx, canvasDom, myCanvasDom, ctx_1, canvasClearDom, canvasCle
     let data: any = reader.result;
     img.src = data;
     img.onload = () => {
-      ctx!.save();
-      ctx!.beginPath();
-      ctx!.rect(0 + pointX * 50, 0 + pointY * 50, 500 * (shapeX / 5), 500 * (shapeY / 5));
-      ctx!.closePath();
-      ctx!.clip();
+      ctx.save();
+      ctx.beginPath();
+      ctx.rect(0 + pointX * 50, 0 + pointY * 50, 500 * (shapeX / 5), 500 * (shapeY / 5));
+      ctx.closePath();
+      ctx.clip();
       if (shadow) {
-        ctx!.shadowOffsetX = shadowX;
-        ctx!.shadowOffsetY = shadowY;
-        ctx!.shadowBlur = blur;
-        ctx!.shadowColor = shaColor;
+        ctx.shadowOffsetX = shadowX;
+        ctx.shadowOffsetY = shadowY;
+        ctx.shadowBlur = blur;
+        ctx.shadowColor = shaColor;
       };
       img.style.display = 'none';
-      ctx!.restore();
+      ctx.restore();
       // 旋转
-      ctx!.globalAlpha = transparency;
+      ctx.globalAlpha = transparency;
       imgRotate();
     };
 
@@ -86,7 +86,7 @@ const drawImg = ({ ctx, canvasDom, myCanvasDom, ctx_1, canvasClearDom, canvasCle
     myCanvasDom!.addEventListener('mousemove', (e) => {
       let x = e.offsetX;
       let y = e.offsetY;
-      const pixel = ctx!.getImageData(x, y, 1, 1);
+      const pixel = ctx.getImageData(x, y, 1, 1);
       const base = pixel.data;
       if (base[3] / 255 !== 0) {
         myCanvasDom!.style.cursor = 'move';
@@ -110,14 +110,14 @@ const drawImg = ({ ctx, canvasDom, myCanvasDom, ctx_1, canvasClearDom, canvasCle
       let jud = judge(originX.current, originY.current, imgWidth, imgHeight, x2, y2, cir, originX1, originY1);
       if (jud === 1) {
         if (isDown) {
-          ctx_1!.save();
-          ctx_1!.clearRect(0, 0, myCanvasDom!.width, myCanvasDom!.height);
-          ctx_1!.translate(originX.current + imgWidth / 2 * types, originY.current + imgHeight / 2 * types);
-          ctx_1!.rotate(Math.PI / 180 * cir);
-          ctx_1!.translate(-(originX.current + imgWidth / 2 * types), -(originY.current + imgHeight / 2 * types));
-          ctx_1!.strokeRect(originX.current, originY.current, imgWidth * types, imgHeight * types);
-          drawFillRect(ctx_1, originX, originY, imgWidth, imgHeight, types);
-          ctx_1!.restore();
+          ctx_1.save();
+          ctx_1.clearRect(0, 0, myCanvasDom!.width, myCanvasDom!.height);
+          ctx_1.translate(originX.current + imgWidth / 2 * types, originY.current + imgHeight / 2 * types);
+          ctx_1.rotate(Math.PI / 180 * cir);
+          ctx_1.translate(-(originX.current + imgWidth / 2 * types), -(originY.current + imgHeight / 2 * types));
+          ctx_1.strokeRect(originX.current, originY.current, imgWidth * types, imgHeight * types);
+          drawFillRect({ctx_1, originX, originY, imgWidth, imgHeight, types});
+          ctx_1.restore();
         }
         myCanvasDom!.onmousemove = (e) => {
           isDown = false;
@@ -125,7 +125,7 @@ const drawImg = ({ ctx, canvasDom, myCanvasDom, ctx_1, canvasClearDom, canvasCle
           originY.current = e.movementY + originY.current;
           originX1.current = originX.current + imgWidth / 2;
           originY1.current = originY.current + imgHeight / 2;
-          ctx!.globalAlpha = transparency;
+          ctx.globalAlpha = transparency;
           imgRotate();
         }
       };
@@ -136,12 +136,12 @@ const drawImg = ({ ctx, canvasDom, myCanvasDom, ctx_1, canvasClearDom, canvasCle
 
     // 点击清除边框
     canvasClearDom!.onclick = () => {
-      ctx_1!.clearRect(0, 0, myCanvasDom!.width, myCanvasDom!.height);
+      ctx_1.clearRect(0, 0, myCanvasDom!.width, myCanvasDom!.height);
       isDown = true;
 
     };
     canvasClearDom_1!.onclick = () => {
-      ctx_1!.clearRect(0, 0, myCanvasDom!.width, myCanvasDom!.height);
+      ctx_1.clearRect(0, 0, myCanvasDom!.width, myCanvasDom!.height);
       isDown = true;
     };
 
@@ -263,24 +263,24 @@ const drawImg = ({ ctx, canvasDom, myCanvasDom, ctx_1, canvasClearDom, canvasCle
     //   imgHeight = imgHeight ? imgHeight : imgH || img.height;
     //   let jud2 = judge(originX.current + imgWidth / 2 * types - 10, originY.current - 50, 20, 20, x2, y2, cir, originX1, originY1);
     //   if (jud2 === 1) {
-    //     ctx!.save();
-    //     ctx!.clearRect(0, 0, canvasDom!.width, canvasDom!.height);
-    //     ctx!.translate(originX1.current, originY1.current);
-    //     ctx!.scale(-1, 1);
-    //     ctx!.translate(-(originX1.current), -(originY1.current));
-    //     ctx!.drawImage(img, originX.current, originY.current, imgWidth * types, imgHeight * types);
-    //     ctx!.restore();
+    //     ctx.save();
+    //     ctx.clearRect(0, 0, canvasDom!.width, canvasDom!.height);
+    //     ctx.translate(originX1.current, originY1.current);
+    //     ctx.scale(-1, 1);
+    //     ctx.translate(-(originX1.current), -(originY1.current));
+    //     ctx.drawImage(img, originX.current, originY.current, imgWidth * types, imgHeight * types);
+    //     ctx.restore();
     //   };
 
     //   let jud5 = judge(originX.current + imgWidth * types + 50, originY.current - 10 + imgHeight / 2 * types, 20, 20, x2, y2, cir, originX1, originY1);
     //   if (jud5 === 1) {
-    //     ctx!.save();
-    //     ctx!.clearRect(0, 0, canvasDom!.width, canvasDom!.height);
-    //     ctx!.translate(originX1.current, originY1.current);
-    //     ctx!.scale(1, -1);
-    //     ctx!.translate(-(originX1.current), -(originY1.current));
-    //     ctx!.drawImage(img, originX.current, originY.current, imgWidth * types, imgHeight * types);
-    //     ctx!.restore();
+    //     ctx.save();
+    //     ctx.clearRect(0, 0, canvasDom!.width, canvasDom!.height);
+    //     ctx.translate(originX1.current, originY1.current);
+    //     ctx.scale(1, -1);
+    //     ctx.translate(-(originX1.current), -(originY1.current));
+    //     ctx.drawImage(img, originX.current, originY.current, imgWidth * types, imgHeight * types);
+    //     ctx.restore();
     //   };
     // });
 
@@ -302,7 +302,6 @@ const drawImg = ({ ctx, canvasDom, myCanvasDom, ctx_1, canvasClearDom, canvasCle
               Math.pow(Math.pow(originX1.current - originX.current, 2) + Math.pow(originY1.current - originY.current, 2), 1 / 2)
             );
           const scale = scale1 / scale2;
-          console.log(scale);
           originX.current = originX.current + (1 - scale) / 2 * imgWidth;
           originY.current = originY.current + (1 - scale) / 2 * imgHeight;
           imgWidth = scale * imgWidth;
@@ -314,8 +313,20 @@ const drawImg = ({ ctx, canvasDom, myCanvasDom, ctx_1, canvasClearDom, canvasCle
       let jud1 = judge(originX.current + imgWidth / 2 * types - 5, originY.current - 5, 10, 10, x2, y2, cir, originX1, originY1);
       if (jud1 === 1) {
         myCanvasDom!.onmousemove = (e) => {
-          originY.current = e.movementY + originY.current;
-          imgHeight += -e.movementY;
+          const scale1 =
+            (
+              Math.pow(Math.pow(originX1.current - e.offsetX, 2) + Math.pow(originY1.current - e.offsetY, 2), 1 / 2)
+            );
+          const scale2 =
+            (
+              Math.pow(Math.pow(originX1.current - (originX.current + imgWidth /2), 2) + Math.pow(originY1.current - originY.current, 2), 1 / 2)
+            );
+          const scale = scale1 / scale2;
+          console.log((1 - scale) * imgHeight);
+          
+          originY.current = originY.current + (1 - scale) * imgHeight;
+          imgHeight = scale * imgHeight;
+          callback({ imgW: imgWidth, imgH: imgHeight });
           control(imgWidth, imgHeight);
         }
       };
@@ -343,7 +354,17 @@ const drawImg = ({ ctx, canvasDom, myCanvasDom, ctx_1, canvasClearDom, canvasCle
       let jud4 = judge(originX.current + imgWidth * types - 5, originY.current - 5 + imgHeight / 2 * types, 10, 10, x2, y2, cir, originX1, originY1);
       if (jud4 === 1) {
         myCanvasDom!.onmousemove = (e) => {
-          imgWidth += e.movementX;
+          const scale1 =
+            (
+              Math.pow(Math.pow(originX1.current - e.offsetX, 2) + Math.pow(originY1.current - e.offsetY, 2), 1 / 2)
+            );
+          const scale2 =
+            (
+              Math.pow(Math.pow(originX1.current - (originX.current+ imgWidth), 2) + Math.pow(originY1.current - (originY.current+ imgHeight / 2), 2), 1 / 2)
+            );
+          const scale = scale1 / scale2;
+          imgWidth = scale * imgWidth;
+          callback({ imgW: imgWidth, imgH: imgHeight });
           control(imgWidth, imgHeight);
         }
       };
@@ -415,7 +436,7 @@ const drawImg = ({ ctx, canvasDom, myCanvasDom, ctx_1, canvasClearDom, canvasCle
     draw!.onclick = function pick(e: any) {
       const x = e.offsetX;
       const y = e.offsetY;
-      const pixel = ctx!.getImageData(x, y, 1, 1);
+      const pixel = ctx.getImageData(x, y, 1, 1);
       const base = pixel.data;
       const rgba = `rgba(${base[0]}, ${base[1]}, ${base[2]}, ${base[3] / 255})`;
       colorPick!.style.background = rgba;

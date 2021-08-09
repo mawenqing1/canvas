@@ -10,15 +10,14 @@ import {Line} from '../interface/interface'
       ctx.shadowBlur = blur;
       ctx.shadowColor = shaColor;
     };
-
-    ctx!.beginPath();
-    ctx!.setLineDash([solid, dotted]);
-    ctx!.lineDashOffset = deviation;
-    ctx!.lineWidth = lwidth;
-    ctx!.lineCap = cap;
-    ctx!.moveTo(150 * types, 150 * types);
-    ctx!.lineTo(150 * types, 300 * types);
-    ctx!.stroke();
+    ctx.beginPath();
+    ctx.setLineDash([solid, dotted]);
+    ctx.lineDashOffset = deviation;
+    ctx.lineWidth = lwidth;
+    ctx.lineCap = cap;
+    ctx.moveTo(150 * types, 150 * types);
+    ctx.lineTo(150 * types, 300 * types);
+    ctx.stroke();
   };
 
   export default  drawLine

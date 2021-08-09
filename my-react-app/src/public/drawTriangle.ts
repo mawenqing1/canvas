@@ -11,18 +11,18 @@ import {Rect} from '../interface/interface'
     const lineargradient = ctx!.createLinearGradient(0, 0, 800, 800);
     lineargradient.addColorStop(0, start);
     lineargradient.addColorStop(1, end);
-    ctx!.globalAlpha = transparency;
+    ctx.globalAlpha = transparency;
     if (colors === '') {
       ctx!.fillStyle = lineargradient;
     } else {
-      ctx!.fillStyle = colors;
+      ctx.fillStyle = colors;
     };
-    ctx!.beginPath();
-    ctx!.moveTo(150 * types, 150 * types);
-    ctx!.lineTo(150 * types, 300 * types);
-    ctx!.lineTo(300 * types, 300 * types);
-    ctx!.fill();
-    ctx!.globalCompositeOperation = layers;
+    ctx.beginPath();
+    ctx.moveTo(150 * types, 150 * types);
+    ctx.lineTo(150 * types, 300 * types);
+    ctx.lineTo(300 * types, 300 * types);
+    ctx.fill();
+    ctx.globalCompositeOperation = layers;
   };
 
   export default  drawTriangle

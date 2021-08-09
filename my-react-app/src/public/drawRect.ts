@@ -15,13 +15,13 @@ const drawRect = ({ctx, transparency, types, colors, shadow, shadowX, shadowY, b
 
     ctx!.globalAlpha = transparency;
     if (colors === '') {
-      ctx!.fillStyle = lineargradient;
+      ctx.fillStyle = lineargradient;
     } else {
-      ctx!.fillStyle = colors;
+      ctx.fillStyle = colors;
     };
-    ctx!.fillRect(150, 150, 400 * types, 400 * types);
-    ctx!.globalCompositeOperation = layers;
-    ctx!.font = "48px serif";
-    ctx!.fillText('图层模式', 200, 200);
+    ctx.fillRect(150, 150, 400 * types, 400 * types);
+    ctx.globalCompositeOperation = layers;
+    ctx.font = "48px serif";
+    ctx.fillText('图层模式', 200, 200);
   };
   export default drawRect

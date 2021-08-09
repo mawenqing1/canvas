@@ -16,12 +16,12 @@ function Change(): JSX.Element {
       {/* 图片缩放模块 */}
       <div id="sf">
         <span>图片缩放</span>
-        <input onChange={(e) => {dispatch({type:'changeTypes',value: e.target.value})}} type="range" id="scale-range" min={0.0} max={2.0} step="0.01" defaultValue='1' />
+        <input onChange={(e) => {dispatch({type:'changeTypes',value: e.target.value})}} type="range" id="scale-range" min={0.0} max={2.0} step={0.01 }defaultValue={1} />
       </div>
       {/* 增加透明度 */}
       <div id="transparency">
         <span>更改透明度</span>
-        <input onChange={(e) => {dispatch({type:'changeTransparency',value: e.target.value})}} type="range" id="tp-range" min={0.0} max={1.0} step="0.1" defaultValue='1' />
+        <input onChange={(e) => {dispatch({type:'changeTransparency',value: e.target.value})}} type="range" id="tp-range" min={0.0} max={1.0} step={0.1} defaultValue={1} />
       </div>
     </header>
     )
