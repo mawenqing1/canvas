@@ -1,5 +1,5 @@
 import React, { useContext }  from 'react';
-import { ContextData } from "../public/initData";
+import { ContextData } from "../canvasPublic/initData";
 
 function ChangeTextBox() {
   const { state, dispatch } = useContext<any>(ContextData);

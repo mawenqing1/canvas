@@ -44,7 +44,6 @@ const drawImg = ({ ctx, canvasDom, myCanvasDom, ctx_1, canvasClearDom, canvasCle
     ctx_1.translate(originX1.current, originY1.current);
     ctx.rotate(Math.PI / 180 * cir);
     ctx_1.rotate(Math.PI / 180 * cir); 
-    console.log(angle);
     ctx.translate(-(originX1.current), -(originY1.current));
     ctx_1.translate(-(originX1.current), -(originY1.current));
     ctx_1.strokeRect(originX.current, originY.current, imgWidth, imgHeight);
@@ -284,7 +283,7 @@ const drawImg = ({ ctx, canvasDom, myCanvasDom, ctx_1, canvasClearDom, canvasCle
       let jud2 = judge(originX.current + imgWidth / 2 * types - 10, originY.current - 50, 20, 20, x2, y2, cir, originX1, originY1);
       if (jud2 === 1) {
         myCanvasDom.onmousemove = (e) => {
-          angle = ((Math.atan2(e.offsetX - originX1.current, e.offsetY - originY1.current) / Math.PI) * -180 - 180) % 360;
+          angle = ((Math.atan2(e.offsetX - originX1.current, e.offsetY - originY1.current) / Math.PI) * -180 +180) % 360;
           control(imgWidth, imgHeight);
         };
       };
@@ -313,15 +312,13 @@ const drawImg = ({ ctx, canvasDom, myCanvasDom, ctx_1, canvasClearDom, canvasCle
         myCanvasDom.onmousemove = (e) => {
           const scale1 =
             (
-              Math.pow(Math.pow(originX1.current - e.offsetX, 2) + Math.pow(originY1.current - e.offsetY, 2), 1 / 2)
+              Math.sqrt(Math.pow(originX1.current - e.offsetX, 2) + Math.pow(originY1.current - e.offsetY, 2))
             );
           const scale2 =
             (
-              Math.pow(Math.pow(originX1.current - (originX.current + imgWidth / 2), 2) + Math.pow(originY1.current - originY.current, 2), 1 / 2)
+              Math.sqrt(Math.pow(originX1.current - (originX.current + imgWidth / 2), 2) + Math.pow(originY1.current - originY.current, 2))
             );
           const scale = scale1 / scale2;
-          console.log(originY1.current, originY.current);
-
           originY.current = originY.current + (1 - scale) * imgHeight;
           imgHeight = scale * imgHeight;
           callback({ imgW: imgWidth, imgH: imgHeight });

@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useReducer } from 'react'
-import { initData, reducer, ContextData } from './public/initData'
+import { initData, reducer, ContextData } from './canvasPublic/initData'
+import { fabric } from 'fabric'
 import './App.less'
 import ChangeComponent from './component/Change'
 import BlockComponent from './component/Block'
@@ -16,14 +17,16 @@ import ShapeBoxComponent from './component/ShapeBox'
 import ChangeDashBoxComponent from './component/ChangeDashBox'
 import ChangeColorBoxComponent from './component/ChangeColorBox'
 import ChangeLayerBoxComponent from './component/ChangeLayerBox'
-import drawRect from './public/drawRect'
-import drawTriangle from './public/drawTriangle'
-import drawLine from './public/drawLine'
-import drawArc from './public/drawArc'
-import drawCircle from './public/drawCircle'
-import drawQctwo from './public/drawQctwo'
-import drawQcthree from './public/drawQcthree'
-import drawImg from './public/drawImg'
+import FabricBoxComponent from './component/FabricBox'
+import drawRect from './canvasPublic/drawRect'
+import drawTriangle from './canvasPublic/drawTriangle'
+import drawLine from './canvasPublic/drawLine'
+import drawArc from './canvasPublic/drawArc'
+import drawCircle from './canvasPublic/drawCircle'
+import drawQctwo from './canvasPublic/drawQctwo'
+import drawQcthree from './canvasPublic/drawQcthree'
+import drawImg from './canvasPublic/drawImg'
+import FabricDraw from './fabricPublic/rect'
 
 function App() {
   const [state, dispatch] = useReducer(reducer, initData);
@@ -60,38 +63,38 @@ function App() {
     if (isShow) {
       switch (show) {
         case 'rect':
-          if(ctx) {
-            drawRect({ctx, transparency, types, colors, shadow, shadowX, shadowY, blur, shaColor, start, end, layers});
+          if (ctx) {
+            drawRect({ ctx, transparency, types, colors, shadow, shadowX, shadowY, blur, shaColor, start, end, layers });
           };
           break;
         case 'triangle':
-          if(ctx) {
-            drawTriangle({ctx, transparency, types, colors, shadow, shadowX, shadowY, blur, shaColor, start, end, layers});
+          if (ctx) {
+            drawTriangle({ ctx, transparency, types, colors, shadow, shadowX, shadowY, blur, shaColor, start, end, layers });
           };
           break;
         case 'circle':
-          if(ctx) {
-            drawCircle({ctx, transparency, types, colors, shadow, shadowX, shadowY, blur, shaColor, start, end, layers});
+          if (ctx) {
+            drawCircle({ ctx, transparency, types, colors, shadow, shadowX, shadowY, blur, shaColor, start, end, layers });
           };
           break;
         case 'line':
-          if(ctx) {
-            drawLine({ctx, transparency, types, colors, shadow, shadowX, shadowY, blur, shaColor, lwidth, cap, solid, dotted, deviation});
+          if (ctx) {
+            drawLine({ ctx, transparency, types, colors, shadow, shadowX, shadowY, blur, shaColor, lwidth, cap, solid, dotted, deviation });
           };
           break;
         case 'arc':
-          if(ctx) {
-            drawArc({ctx, transparency, types, colors, shadow, shadowX, shadowY, blur, shaColor});
+          if (ctx) {
+            drawArc({ ctx, transparency, types, colors, shadow, shadowX, shadowY, blur, shaColor });
           };
           break;
         case 'qctwo':
-          if(ctx) {
-            drawQctwo({ctx, transparency, types, colors, shadow, shadowX, shadowY, blur, shaColor});
+          if (ctx) {
+            drawQctwo({ ctx, transparency, types, colors, shadow, shadowX, shadowY, blur, shaColor });
           };
           break;
         case 'qcthree':
-          if(ctx) {
-            drawQcthree({ctx, transparency, types, colors, shadow, shadowX, shadowY, blur, shaColor});
+          if (ctx) {
+            drawQcthree({ ctx, transparency, types, colors, shadow, shadowX, shadowY, blur, shaColor });
           };
           break;
         case 'img':
@@ -172,6 +175,12 @@ function App() {
     }
   }, [clear]);
 
+  // fabric绘制
+  useEffect(() => {
+    FabricDraw(show)
+  }, [show])
+
+
   return (
     <ContextData.Provider value={{ state, dispatch }}>
       <div className="App">
@@ -197,18 +206,19 @@ function App() {
           <ClearComponent></ClearComponent>
           <ShadowComponent></ShadowComponent>
           <ShapeBoxComponent></ShapeBoxComponent>
+          <FabricBoxComponent></FabricBoxComponent>
         </div>
         <div className="huabu">
           <ul>
             <li>
-              <canvas ref={canvasClear_1} className="cancel"></canvas>
+              <canvas ref={canvasClear_1} width="200" height="700" className="cancel"></canvas>
             </li>
             <li>
-              <canvas ref={canvas} width="800" height="700">浏览器不支持canvas</canvas>
+              <canvas ref={canvas} id="canvas" width="800" height="700">浏览器不支持canvas</canvas>
               <canvas ref={myCanvas} id="myCanvas" width="800" height="700">浏览器不支持canvas</canvas>
             </li>
             <li>
-              <canvas ref={canvasClear} className="cancel_1"></canvas>
+              <canvas ref={canvasClear} width="200" height="700" className="cancel_1"></canvas>
             </li>
           </ul>
         </div>

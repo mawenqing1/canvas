@@ -158,4 +158,4 @@ interface Qcthree {
     types:number
    };
 
-export type { IProps, Img, Block, Arc, Circle, Line, Qcthree, Rect, controls };
+export type { IProps, Img, Block, Arc, Circle, Line, Qcthree, Rect, controls,   };
