@@ -26,6 +26,8 @@ function FabricBox() {
       <button onClick = {ploy} >┌</button>
       <button onClick = {text} >文本</button>
       <button onClick = {img} >图片</button>
+      <button id="group">组合</button>
+      <button id="ungroup" >拆分</button>
     </div>
   );
 }
