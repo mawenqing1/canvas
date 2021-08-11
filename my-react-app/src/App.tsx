@@ -175,12 +175,6 @@ function App() {
     }
   }, [clear]);
 
-  // fabric绘制
-  useEffect(() => {
-    FabricDraw(show)
-  }, [show])
-
-
   return (
     <ContextData.Provider value={{ state, dispatch }}>
       <div className="App">
