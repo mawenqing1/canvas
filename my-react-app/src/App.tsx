@@ -26,7 +26,6 @@ import drawCircle from './canvasPublic/drawCircle'
 import drawQctwo from './canvasPublic/drawQctwo'
 import drawQcthree from './canvasPublic/drawQcthree'
 import drawImg from './canvasPublic/drawImg'
-import FabricDraw from './fabricPublic/rect'
 
 function App() {
   const [state, dispatch] = useReducer(reducer, initData);

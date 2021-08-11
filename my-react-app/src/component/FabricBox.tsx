@@ -2,8 +2,9 @@ import { fabric } from 'fabric'
 import React from 'react';
 function FabricBox() {
   let canvasFabric: fabric.Canvas | null = null;
-  const group = document.getElementById('group');
-  const ungroup = document.getElementById('ungroup');
+
+  let group = document.getElementById('group');
+  let ungroup = document.getElementById('ungroup');
   let mousedownX = 0;
   let mousedownY = 0;
   let mousemoveX = 0;
@@ -17,6 +18,10 @@ function FabricBox() {
 const initCanvas = () => {
   if(!canvasFabric) {
     canvasFabric = new fabric.Canvas('canvas');
+    group = document.getElementById('group');
+    ungroup = document.getElementById('ungroup');
+    groupBox();
+    ungroupBox();
   }
 }
 
@@ -41,8 +46,6 @@ canvasFabric!.on('object:scaling', () => {
 canvasFabric!.on('mouse:move', (event) => {
     mousemoveX = event.e.offsetX;
     mousemoveY = event.e.offsetY;
-    console.log(types);
-    
     if (isDraw&&isGroup) {
         switch (types) {
             case 'fabricRect':
@@ -137,8 +140,8 @@ canvasFabric!.on('mouse:up', () => {
           img.set({
               left: mousedownX > mousemoveX ? mousemoveX : mousedownX,
               top: mousedownY > mousemoveY ? mousemoveY : mousedownY,
-              scaleX: (mousemoveX - mousedownX) / img.width,
-              scaleY: (mousemoveY - mousedownY) / img.height,
+              scaleX: (mousemoveX - mousedownX) / (img.width as number),
+              scaleY: (mousemoveY - mousedownY) / (img.height as number),
           })
           remove(img)
       })
@@ -149,8 +152,6 @@ canvasFabric!.on('mouse:up', () => {
     initEvent();
     if(types === type)return
     types = type;
-    console.log(types,type);
-    
   }
 
   const remove = (canvasObj: any) => {
@@ -161,34 +162,36 @@ canvasFabric!.on('mouse:up', () => {
       removeObj = canvasObj;
   };
   // 组合
-  if (group) {
-      group.onclick = () => {
-          isGroup = false;
-          if (!canvasFabric!.getActiveObject()) {
-              return;
-          }
-          if (canvasFabric!.getActiveObject().type !== 'activeSelection') {
-              return;
-          }
-          canvasFabric!.getActiveObject().toGroup();
-          canvasFabric!.requestRenderAll();
+  const groupBox = () => {
+    group!.onclick = () => {
+      isGroup = false;
+      console.log(isGroup);
+      
+      if (!canvasFabric!.getActiveObject()) {
+          return;
       }
+      if (canvasFabric!.getActiveObject().type !== 'activeSelection') {
+          return;
+      }
+      canvasFabric!.getActiveObject().toGroup();
+      canvasFabric!.requestRenderAll();
+  }
   };
 
   // 取消组合
-  if (ungroup) {
-      ungroup.onclick = () => {
-          if (!canvasFabric!.getActiveObject()) {
-              return;
-          }
-          if (canvasFabric!.getActiveObject().type !== 'group') {
-              return;
-          }
-          canvasFabric!.getActiveObject().toActiveSelection();
-          canvasFabric!.requestRenderAll();
-      }
-  }
-
+ const ungroupBox = () => {
+  ungroup!.onclick = () => {
+    if (!canvasFabric!.getActiveObject()) {
+        return;
+    }
+    if (canvasFabric!.getActiveObject().type !== 'group') {
+        return;
+    }
+    canvasFabric!.getActiveObject().toActiveSelection();
+    canvasFabric!.requestRenderAll();
+}
+ };
+  
   return (
     <div className="fabricDraw">
       <button onClick ={() => {fabricType('fabricRect')}}>▭</button>
