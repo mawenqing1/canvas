@@ -1,208 +1,232 @@
-import { fabric } from 'fabric'
 import React from 'react';
+let fabric = window.fabric;
 function FabricBox() {
-  let canvasFabric: fabric.Canvas | null = null;
+    let canvasFabric: fabric.Canvas | null = null;
 
-  let group = document.getElementById('group');
-  let ungroup = document.getElementById('ungroup');
-  let mousedownX = 0;
-  let mousedownY = 0;
-  let mousemoveX = 0;
-  let mousemoveY = 0;
-  let isDraw = false;
-  let isGroup = true;
-  let isText = false;
-  let removeObj: any = null;
-  let types = '';
+    let group = document.getElementById('group');
+    let ungroup = document.getElementById('ungroup');
+    let rubber = document.getElementById('rubber');
+    let mousedownX = 0;
+    let mousedownY = 0;
+    let mousemoveX = 0;
+    let mousemoveY = 0;
+    let isDraw = false;
+    let isGroup = true;
+    let isText = false;
+    let removeObj: any = null;
+    let types = '';
+    let sizes = 1;
 
-const initCanvas = () => {
-  if(!canvasFabric) {
-    canvasFabric = new fabric.Canvas('canvas');
-    group = document.getElementById('group');
-    ungroup = document.getElementById('ungroup');
-    groupBox();
-    ungroupBox();
-  }
-}
-
-const initEvent = () => {
-  canvasFabric!.on('mouse:down', (event) => {
-    mousedownX = event.e.offsetX;
-    mousedownY = event.e.offsetY;
-    isDraw = true;
-    isText = !isText;
-});
-
-canvasFabric!.on('object:moving', () => {
-    isDraw = false;
-});
-canvasFabric!.on('object:rotating', () => {
-    isDraw = false;
-});
-canvasFabric!.on('object:scaling', () => {
-    isDraw = false;
-});
-
-canvasFabric!.on('mouse:move', (event) => {
-    mousemoveX = event.e.offsetX;
-    mousemoveY = event.e.offsetY;
-    if (isDraw&&isGroup) {
-        switch (types) {
-            case 'fabricRect':
-                rect();
-                break;
-            case 'fabricCircle':
-                circle();
-                break;
-            case 'fabricPloy':
-                ploy();
-                break;
-            case 'fabricText':
-                text();
-                break;
-            case 'fabricImg':
-                img();
-                break;
+    const initCanvas = () => {
+        if (!canvasFabric) {
+            canvasFabric = new fabric.Canvas('canvas');
+            group = document.getElementById('group');
+            ungroup = document.getElementById('ungroup');
+            rubber = document.getElementById('rubber');
+            groupBox();
+            ungroupBox();
+            rubberBox();
         }
     }
-});
-canvasFabric!.on('mouse:up', () => {
-    isDraw = false;
-    removeObj = null;
-    isGroup = true;
-});
-};
-  
-  const rect = () => {
-      let canvasObj = new fabric.Rect({
-          left: mousedownX,
-          top: mousedownY,
-          width: mousemoveX - mousedownX,
-          height: mousemoveY - mousedownY,
-          fill: '',
-          stroke: 'black',
-      });
-      // canvasFabric.add(rect);
-      remove(canvasObj);
-  };
 
-  const circle = () => {
-      let canvasObj = new fabric.Circle({
-          left: mousedownX > mousemoveX ? mousemoveX : mousedownX,
-          top: mousedownY > mousemoveY ? mousemoveY : mousedownY,
-          radius: Math.sqrt(Math.pow((mousemoveX - mousedownX) / 2, 2) + Math.pow((mousemoveY - mousedownY) / 2, 2)),
-          fill: undefined,
-          stroke: 'black'
-      });
-      remove(canvasObj);
-  };
+    const initEvent = () => {
+        canvasFabric!.on('mouse:down', (event: any) => {
+            mousedownX = event.e.offsetX;
+            mousedownY = event.e.offsetY;
+            isDraw = true;
+            isText = !isText;
+        });
 
-  const ploy = () => {
-      let points: { x: number; y: number; }[] = [{ x: mousedownX, y: mousedownY }, { x: mousemoveX, y: mousemoveY }];
-      points.push({ x: mousedownX, y: mousedownY })
+        canvasFabric!.on('object:moving', () => {
+            isDraw = false;
+        });
+        canvasFabric!.on('object:rotating', () => {
+            isDraw = false;
+        });
+        canvasFabric!.on('object:scaling', () => {
+            isDraw = false;
+        });
 
-      let canvasObj = new fabric.Polyline(points
-          , {
-              fill: undefined,
-              stroke: 'black'
-          });
-      canvasObj.set('selectable', false)
-      remove(canvasObj);
-  };
+        canvasFabric!.on('mouse:move', (event:any) => {
+            mousemoveX = event.e.offsetX;
+            mousemoveY = event.e.offsetY;
+            if (isDraw && isGroup) {
+                switch (types) {
+                    case 'fabricRect':
+                        rect();
+                        break;
+                    case 'fabricCircle':
+                        circle();
+                        break;
+                    case 'fabricPloy':
+                        ploy();
+                        break;
+                    case 'fabricText':
+                        text();
+                        break;
+                    case 'fabricImg':
+                        img();
+                        break;
+                }
+            }
+        });
+        canvasFabric!.on('mouse:up', () => {
+            isDraw = false;
+            removeObj = null;
+        });
+    };
 
-  const text = () => {
-      let canvasObj = new fabric.Textbox('', {
-          left: mousemoveX,
-          top: mousedownY,
-          fill: '',
-          backgroundColor: '#fff',
-          stroke: 'black',
-          hasControls: true,
-          editable: true,
-      });
-      if (isText) {
-          canvasFabric!.add(canvasObj);
-          canvasObj.enterEditing();
-          canvasObj.hiddenTextarea?.focus();
-      } else {
-          canvasObj.exitEditing();
-          canvasObj.set("backgroundColor", "rgba(0,0,0,0)");
-          if (canvasObj.text == "") {
-              canvasFabric!.remove(canvasObj);
-          }
-          canvasFabric!.renderAll();
-          return
-      }
-  };
+    const rect = () => {
+        let canvasObj = new fabric.Rect({
+            left: mousedownX,
+            top: mousedownY,
+            width: mousemoveX - mousedownX,
+            height: mousemoveY - mousedownY,
+            fill: '',
+            stroke: 'black',
+        });
+        // canvasFabric.add(rect);
+        remove(canvasObj);
+    };
 
-  const img = () => {
-      fabric.Image.fromURL('https://img2.baidu.com/it/u=3355464299,584008140&fm=26&fmt=auto&gp=0.jpg', function (img) {
-          img.set({
-              left: mousedownX > mousemoveX ? mousemoveX : mousedownX,
-              top: mousedownY > mousemoveY ? mousemoveY : mousedownY,
-              scaleX: (mousemoveX - mousedownX) / (img.width as number),
-              scaleY: (mousemoveY - mousedownY) / (img.height as number),
-          })
-          remove(img)
-      })
-  };
+    const circle = () => {
+        let canvasObj = new fabric.Circle({
+            left: mousedownX > mousemoveX ? mousemoveX : mousedownX,
+            top: mousedownY > mousemoveY ? mousemoveY : mousedownY,
+            radius: Math.sqrt(Math.pow((mousemoveX - mousedownX) / 2, 2) + Math.pow((mousemoveY - mousedownY) / 2, 2)),
+            fill: undefined,
+            stroke: 'black'
+        });
+        remove(canvasObj);
+    };
 
-  const fabricType = (type:string) => {
-    initCanvas();
-    initEvent();
-    if(types === type)return
-    types = type;
-  }
+    const ploy = () => {
+        let points: { x: number; y: number; }[] = [{ x: mousedownX, y: mousedownY }, { x: mousemoveX, y: mousemoveY }];
+        points.push({ x: mousedownX, y: mousedownY })
 
-  const remove = (canvasObj: any) => {
-      if (removeObj) {
-          canvasFabric!.remove(removeObj)
-      }
-      canvasFabric!.add(canvasObj);
-      removeObj = canvasObj;
-  };
-  // 组合
-  const groupBox = () => {
-    group!.onclick = () => {
-      isGroup = false;
-      console.log(isGroup);
-      
-      if (!canvasFabric!.getActiveObject()) {
-          return;
-      }
-      if (canvasFabric!.getActiveObject().type !== 'activeSelection') {
-          return;
-      }
-      canvasFabric!.getActiveObject().toGroup();
-      canvasFabric!.requestRenderAll();
-  }
-  };
+        let canvasObj = new fabric.Polyline(points
+            , {
+                fill: undefined,
+                stroke: 'black'
+            });
+        canvasObj.set('selectable', false)
+        remove(canvasObj);
+    };
 
-  // 取消组合
- const ungroupBox = () => {
-  ungroup!.onclick = () => {
-    if (!canvasFabric!.getActiveObject()) {
-        return;
+    const text = () => {
+        let textObj = new fabric.Textbox('', {
+            left: mousemoveX,
+            top: mousedownY,
+            fill: '',
+            backgroundColor: '#fff',
+            stroke: 'black',
+            hasControls: true,
+            editable: true,
+            selectable: false,
+        });
+        if (isText) {
+            canvasFabric!.add(textObj);
+            textObj.enterEditing();
+            textObj.hiddenTextarea?.focus();
+        } else {
+            textObj.exitEditing();
+            textObj.set("backgroundColor", "rgba(0,0,0,0)");
+            if (textObj.text === '') {
+                canvasFabric!.remove(textObj);
+            }
+            canvasFabric!.renderAll();
+            (textObj as unknown) = null;
+            return
+        }
+    };
+
+    const img = () => {
+        fabric.Image.fromURL('https://img2.baidu.com/it/u=3355464299,584008140&fm=26&fmt=auto&gp=0.jpg', function (img: { set: (arg0: { left: number; top: number; scaleX: number; scaleY: number; }) => void; width: number; height: number; }) {
+            img.set({
+                left: mousedownX > mousemoveX ? mousemoveX : mousedownX,
+                top: mousedownY > mousemoveY ? mousemoveY : mousedownY,
+                scaleX: (mousemoveX - mousedownX) / (img.width as number),
+                scaleY: (mousemoveY - mousedownY) / (img.height as number),
+            })
+            remove(img)
+        })
+    };
+
+    const fabricType = (type: string) => {
+        initCanvas();
+        initEvent();
+        if (types === type) return
+        types = type;
     }
-    if (canvasFabric!.getActiveObject().type !== 'group') {
-        return;
+
+    const remove = (canvasObj: any) => {
+        if (removeObj) {
+            canvasFabric!.remove(removeObj)
+        }
+        canvasFabric!.add(canvasObj);
+        removeObj = canvasObj;
+    };
+    // 组合
+    const groupBox = () => {
+        group!.onclick = () => {
+            isGroup = false;
+            console.log(isGroup);
+
+            if (!canvasFabric!.getActiveObject()) {
+                return;
+            }
+            if (canvasFabric!.getActiveObject().type !== 'activeSelection') {
+                return;
+            }
+            canvasFabric!.getActiveObject().toGroup();
+            canvasFabric!.requestRenderAll();
+        }
+    };
+
+    // 取消组合
+    const ungroupBox = () => {
+        ungroup!.onclick = () => {
+            if (!canvasFabric!.getActiveObject()) {
+                return;
+            }
+            if (canvasFabric!.getActiveObject().type !== 'group') {
+                return;
+            }
+            canvasFabric!.getActiveObject().toActiveSelection();
+            canvasFabric!.requestRenderAll();
+        }
+    };
+
+    // 橡皮擦
+    const rubberBox = () => {
+        rubber!.onclick = () => {
+            isGroup = false;
+            canvasFabric!.freeDrawingBrush = new fabric.EraserBrush(canvasFabric);
+            canvasFabric.isDrawingMode = true;
+            rubberSize(sizes);
+        }
+    };
+
+    // 获取橡皮擦大小
+    const rubberSize = (size:number) => {
+        sizes = size;
+        canvasFabric.freeDrawingBrush.width = sizes;
     }
-    canvasFabric!.getActiveObject().toActiveSelection();
-    canvasFabric!.requestRenderAll();
-}
- };
-  
-  return (
-    <div className="fabricDraw">
-      <button onClick ={() => {fabricType('fabricRect')}}>▭</button>
-      <button onClick ={() => {fabricType('fabricCircle')}}  >◯</button>
-      <button onClick ={() => {fabricType('fabricPloy')}}  >┌</button>
-      <button onClick ={() => {fabricType('fabricText')}}  >文本</button>
-      <button onClick ={() => {fabricType('fabricImg')}}  >图片</button>
-      <button id="group">组合</button>
-      <button id="ungroup" >拆分</button>
-    </div>
-  );
+
+    return (
+        <div className="fabricDraw">
+            <button onClick={() => { fabricType('fabricRect'),isGroup = true }}>▭</button>
+            <button onClick={() => { fabricType('fabricCircle'),isGroup = true }}>◯</button>
+            <button onClick={() => { fabricType('fabricPloy'),isGroup = true }}>┌</button>
+            <button onClick={() => { fabricType('fabricText'),isGroup = true }}>文本</button>
+            <button onClick={() => { fabricType('fabricImg'),isGroup = true }}>图片</button>
+            <button id="group">组合</button>
+            <button id="ungroup" >拆分</button>
+            <button id="rubber" >橡皮擦</button>
+            <span>大小</span>
+            <input onChange ={(e) => {rubberSize(Number(e.target.value))}} type="range" min={1} max={20} step={1} defaultValue={1} />
+        </div>
+    );
 }
 
 export default FabricBox;
