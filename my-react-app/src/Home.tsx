@@ -1,6 +1,5 @@
 import React, { useEffect, useRef, useReducer } from 'react'
 import { initData, reducer, ContextData } from './canvasPublic/initData'
-import { BrowserRouter as Router, Route } from "react-router-dom";
 import './App.less'
 import ChangeComponent from './component/Change'
 import BlockComponent from './component/Block'
@@ -28,7 +27,7 @@ import drawQctwo from './canvasPublic/drawQctwo'
 import drawQcthree from './canvasPublic/drawQcthree'
 import drawImg from './canvasPublic/drawImg'
 
-function App() {
+function Home() {
   const [state, dispatch] = useReducer(reducer, initData);
   const { isShow, show, colors, types, transparency, cir, tile, tex, clear, shadow, shadowX, shadowY, blur, shaColor, align, baseline, textDirection, lwidth, cap, size, fonts, shapeX, shapeY, pointX, pointY, solid, dotted, deviation, start, end, layers } = state;
 
@@ -223,4 +222,4 @@ function App() {
   )
 }
 
-export default App
+export default Home
