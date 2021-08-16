@@ -17,7 +17,6 @@ import ChangeDashBoxComponent from './component/ChangeDashBox'
 import ChangeColorBoxComponent from './component/ChangeColorBox'
 import ChangeLayerBoxComponent from './component/ChangeLayerBox'
 import FabricBoxComponent from './component/FabricBox'
-import WebglFilter from'./component/WebglFilter'
 import drawRect from './canvasPublic/drawRect'
 import drawTriangle from './canvasPublic/drawTriangle'
 import drawLine from './canvasPublic/drawLine'
@@ -216,7 +215,6 @@ function Home() {
           </ul>
         </div>
         <FabricBoxComponent></FabricBoxComponent>
-        <WebglFilter></WebglFilter>
       </div>
     </ContextData.Provider>
   )

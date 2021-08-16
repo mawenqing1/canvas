@@ -274,9 +274,6 @@ function FabricBox() {
 
 
     // fabric滤镜
-    // const brighValue = (value:number) => {
-    //     brighvalue = value;
-    // };
     const filter = () => {
         let $ = function (id: string) { return document.getElementById(id) };
         function applyFilter(index: number, filter: any) {
