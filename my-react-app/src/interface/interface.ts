@@ -75,7 +75,11 @@ interface Block {
     end: string;
     layers: string;
     imgW: number;
-    imgH: number
+    imgH: number;
+    sat:number;
+    rvalue:number;
+    gvalue:number;
+    bvalue:number
 };
 
 interface Arc {

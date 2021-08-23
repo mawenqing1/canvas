@@ -1,9 +1,11 @@
-import React, { useContext } from 'react';
-import { ContextData } from "../canvasPublic/initData";
+import React, { useContext, useReducer } from 'react';
+import { ContextData, reducer, initData } from "../canvasPublic/initData";
 
 function Block(): JSX.Element {
   const { state, dispatch } = useContext<any>(ContextData);
-
+  // const [ state, dispatch ] = useReducer(reducer,initData);
+  // const {show, isShow} = state;
+// console.log(isShow,show);
   const rect = () => {
     dispatch({ type: 'changeState', data: { show: 'rect' } });
     dispatch({ type: 'changeIsShow' })

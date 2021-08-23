@@ -1,6 +1,6 @@
 import { createContext } from "react";
-import {Block} from '../interface/interface'
-const initData:Block = {
+import { Block } from '../interface/interface'
+const initData: Block = {
     canvas: null,
     myCanvas: null,
     canvasClear: null,
@@ -40,8 +40,12 @@ const initData:Block = {
     start: "black",
     end: "black",
     layers: "",
-    imgW:0,
-    imgH:0
+    imgW: 0,
+    imgH: 0,
+    sat: 0.1,
+    rvalue: 0.1,
+    gvalue: 0.1,
+    bvalue: 0.1,
 }; //初始数据
 
 // 派发事件
@@ -110,6 +114,14 @@ const reducer = (state: Block, action: any) => {
             return { ...state, end: value };
         case "changeLayers":
             return { ...state, layers: value };
+        case "changeSat":
+            return { ...state, sat: value };
+        case "changeRvalue":
+            return { ...state, rvalue: value };
+        case "changeGvalue":
+            return { ...state, gvalue: value };
+        case "changeBvalue":
+            return { ...state, bvalue: value };
         case "initDate":
             return { ...state, ...value };
         default:

@@ -291,10 +291,6 @@ function FabricBox() {
             }
         }
         let f = fabric.Image.filters;
-        // const brightness = () => {
-        //     applyFilter(0, this.checked && new f.Brightness({
-        //         brightness: parseFloat(brighValue(brighvalue));
-        // }));
 
         canvasFabric.on({
             'selection:created': function () {
