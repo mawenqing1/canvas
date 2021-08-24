@@ -29,8 +29,6 @@ import drawImg from './canvasPublic/drawImg'
 function Home() {
   const [state, dispatch] = useReducer(reducer, initData);
   const { isShow, show, colors, types, transparency, cir, tile, tex, clear, shadow, shadowX, shadowY, blur, shaColor, align, baseline, textDirection, lwidth, cap, size, fonts, shapeX, shapeY, pointX, pointY, solid, dotted, deviation, start, end, layers } = state;
-  console.log(state);
-  
 
   let canvas = useRef<HTMLCanvasElement>(null);
   let myCanvas = useRef<HTMLCanvasElement>(null);

@@ -83,4 +83,6 @@ export class MathLib2D extends Array {
         return (this.x * this.y + v.x * v.y) / Math.sqrt(Math.pow(this.x, 2) + Math.pow(this.y, 2)) * Math.sqrt(Math.pow(v.x, 2) + Math.pow(v.y, 2));
     };
 
+    
+
 }
