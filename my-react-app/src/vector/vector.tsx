@@ -1,10 +1,12 @@
 import React from 'react';
 import parametric from './parametric'
 import { MathLib2D } from './MathLib2D';
-import { any, number } from 'prop-types';
 import './vector.less'
+import Triangulation from './triangulation'
+import Animation from './animation'
 
 function Vector() {
+  
   // 阿基米德曲线
   const archimedes = () => {
     const helical = parametric(
@@ -54,14 +56,14 @@ function Vector() {
         x: x1
       }, {
         x: x2
-      }]) => (1 - t) ** 2 * x0 + 2 * t * (1 - t) * x1 + t ** 2 * x2,
+      }]:{x:number}[]) => (1 - t) ** 2 * x0 + 2 * t * (1 - t) * x1 + t ** 2 * x2,
       (t: number, [{
         y: y0
       }, {
         y: y1
       }, {
         y: y2
-      }]) => (1 - t) ** 2 * y0 + 2 * t * (1 - t) * y1 + t ** 2 * y2,
+      }]:{y:number}[]) => (1 - t) ** 2 * y0 + 2 * t * (1 - t) * y1 + t ** 2 * y2,
     );
     const p0 = new MathLib2D(0, 0);
     const p1 = new MathLib2D(0.2, 0);
@@ -85,7 +87,7 @@ function Vector() {
         x: x2
       }, {
         x: x3
-      }]) => (1 - t) ** 3 * x0 + 3 * (1 - t) ** 2 * t * x1 + 3 * (1 - t) ** 2 * x2 + t ** 3 * x3,
+      }]:{x:number}[]) => (1 - t) ** 3 * x0 + 3 * (1 - t) ** 2 * t * x1 + 3 * (1 - t) ** 2 * x2 + t ** 3 * x3,
       (t:number, [{
         y: y0
       }, {
@@ -94,7 +96,7 @@ function Vector() {
         y: y2
       }, {
         y: y3
-      }]) => (1 - t) ** 3 * y0 + 3 * (1 - t) ** 2 * t * y1 + 3 * (1 - t) ** 2 * y2 + t ** 3 * y3,
+      }]:{y:number}[]) => (1 - t) ** 3 * y0 + 3 * (1 - t) ** 2 * t * y1 + 3 * (1 - t) ** 2 * y2 + t ** 3 * y3,
     );
     const p0 = new MathLib2D(0, 0);
     const p1 = new MathLib2D(0.2, 0);
@@ -120,6 +122,8 @@ function Vector() {
         <li><button onClick={() =>{starLine()}}>星形线</button></li>
         <li><button onClick={() =>{quadric()}}>二阶贝塞尔曲线</button></li>
         <li><button onClick={() =>{cubic()}}>三阶贝塞尔曲线</button></li>
+        <li><Triangulation/></li>
+        <li><Animation /></li>
       </ul>
       <canvas id="canvas" width="800" height="800"></canvas>
     </div>
