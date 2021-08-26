@@ -202,6 +202,7 @@ function Animation() {
         void main() {
           float p = min(1.0, u_time / u_duration);
           float rad = u_rotation + 3.14 * 10.0 * p;
+          float ang = 0.5;
           float scale = u_scale * p * (2.0 - p);
           vec2 offset = 2.0 * u_dir * p * p;
           // 平移矩阵
@@ -222,16 +223,22 @@ function Animation() {
             0.0, scale, 0.0,
             0.0, 0.0, 1.0
           );
+          //扭曲矩阵
+          mat3 skewMatrix = mat3(
+            1.0, tan(ang), 0.0,
+            tan(ang), 1.0, 0.0,
+            0.0, 0.0, 1.0
+          );
           gl_PointSize = 10.0;
-          // vec3 pos = vec3(a_position, 1.0);
-          // 先随机偏移
+          // 随机偏移
           mat3 randomTranslate = mat3(
             1.0, 0.0, 0.0,
             0.0, 1.0, 0.0,
             0.0, 0.0, 1.0
           );
           vec3 translate = randomTranslate * vec3(a_position, 1.0);
-          vec3 pos = translateMatrix * scaleMatrix * rotateMatrix * translate;
+          vec3 pos = skewMatrix * translateMatrix * scaleMatrix * rotateMatrix * translate;
+          // vec3 pos = skewMatrix * vec3(a_position, 1.0);
           gl_Position = vec4(pos, 1.0);
           vp = p;
           v_texCoord = a_texCoord;

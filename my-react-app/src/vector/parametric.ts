@@ -15,7 +15,7 @@ function parametric(xFn:any, yFn:any) {
     };
 };
 function draw(points:any) {
-    const gl = document.getElementById('canvas')!.getContext('webgl');
+    const gl = document.getElementById('vecCanvas')!.getContext('webgl');
     const vsSource = `
     attribute vec4 a_Position;
         

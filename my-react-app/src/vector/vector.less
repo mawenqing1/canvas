@@ -1,8 +1,11 @@
-canvas {
+#vecCanvas {
     float: left;
+    border: 1px solid grey;
+    margin-left: 20px;
 }
 
 .btn {
+    margin-left: 5px;
     float: left;
     button {
         width: 150px;
@@ -12,5 +15,14 @@ canvas {
         background-color: pink;
         border: none;
         margin-bottom: 5px;
+        &:focus{
+            background-color: skyblue;
+        }
+    };
+    input {
+        width: 150px;
+        border: 1px solid skyblue;
+        border-radius: 10px;
+        text-indent: 10px;
     }
 }

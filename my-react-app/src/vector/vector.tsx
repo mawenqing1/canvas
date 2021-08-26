@@ -2,8 +2,9 @@ import React from 'react';
 import parametric from './parametric'
 import { MathLib2D } from './MathLib2D';
 import './vector.less'
-import Triangulation from './triangulation'
-import Animation from './animation'
+import Triangulation from './components/triangulation'
+import Animation from './components/animation'
+import PloyLine from './components/ployLine'
 
 function Vector() {
   
@@ -124,8 +125,9 @@ function Vector() {
         <li><button onClick={() =>{cubic()}}>三阶贝塞尔曲线</button></li>
         <li><Triangulation/></li>
         <li><Animation /></li>
+        <li><PloyLine /></li>
       </ul>
-      <canvas id="canvas" width="800" height="800"></canvas>
+      <canvas id="vecCanvas" width="800" height="800"></canvas>
     </div>
   );
 }

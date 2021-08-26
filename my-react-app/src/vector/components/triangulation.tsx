@@ -36,7 +36,7 @@ function Triangulation() {
         res.vertices[b * 2], res.vertices[b * 2 + 1],
         res.vertices[c * 2], res.vertices[c * 2 + 1])
     };
-    const gl = document.getElementById('canvas')!.getContext('webgl');
+    const gl = document.getElementById('vecCanvas')!.getContext('webgl');
     const vsSource = `
     attribute vec4 a_Position;
         
