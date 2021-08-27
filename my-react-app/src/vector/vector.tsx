@@ -5,6 +5,7 @@ import './vector.less'
 import Triangulation from './components/triangulation'
 import Animation from './components/animation'
 import PloyLine from './components/ployLine'
+import Clear from './components/clear'
 
 function Vector() {
   
@@ -126,6 +127,7 @@ function Vector() {
         <li><Triangulation/></li>
         <li><Animation /></li>
         <li><PloyLine /></li>
+        <li><Clear /></li>
       </ul>
       <canvas id="vecCanvas" width="800" height="800"></canvas>
     </div>

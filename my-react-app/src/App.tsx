@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useReducer } from 'react'
+import React from 'react'
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 import './App.less'
 import Home from './Home'
@@ -26,7 +26,7 @@ function App() {
 
         <Route path="/" exact component={Home} />
         <Route path="/webglFilter" exact component={WebglFilter} />
-        <Route path="/vector" exact component={Vector}></Route>
+        <Route path="/vector" exact component={Vector} />
       </main>
     </Router>
   )
