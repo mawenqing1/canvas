@@ -4,9 +4,11 @@ import './App.less'
 import Home from './Home'
 import WebglFilter from './component/WebglFilter'
 import Vector from './vector/vector';
+import Performance from './performance/performance' 
 
 
 function App() {
+
   return (
     <Router>
       <main>
@@ -21,12 +23,16 @@ function App() {
             <li>
               <Link to="/vector">vector</Link>
             </li>
+            <li>
+              <Link to="/performance">Performance</Link>
+            </li>
           </ul>
         </nav>
 
         <Route path="/" exact component={Home} />
         <Route path="/webglFilter" exact component={WebglFilter} />
         <Route path="/vector" exact component={Vector} />
+        <Route path="/performance" exact component={Performance} />
       </main>
     </Router>
   )
