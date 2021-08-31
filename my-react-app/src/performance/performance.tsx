@@ -5,6 +5,10 @@ function Performance() {
   const performances = () => {
     const canvas = document.querySelector('canvas');
     const ctx = (canvas as HTMLCanvasElement).getContext('2d');
+    // let cx = 0,
+    // cy = 0;
+    let x = 0,
+      y = 0;
     // 创建正多边形，返回顶点
     function regularShape(x: number, y: number, r: number, edges = 3) {
       const points = [];
@@ -14,32 +18,26 @@ function Performance() {
         points.push([x + r * Math.sin(theta), y + r * Math.cos(theta)]);
       }
       return points;
+
     }
     // 根据顶点绘制图形
-    function drawShape(context: CanvasRenderingContext2D, points: string | any[], rad:number) {
-      context.fillStyle = `rgb(${255*Math.random()},${255*Math.random()},${255*Math.random()})`;
+    function drawShape(context: CanvasRenderingContext2D, points: string | any[], rad: number, cx: number, cy: number) {
+      context.fillStyle = `rgb(${255 * Math.random()},${255 * Math.random()},${255 * Math.random()})`;
       context.strokeStyle = 'black';
       context.lineWidth = 2;
       context.save();
-      context.translate(canvas!.width/2,canvas!.height/2);
+      context.translate(canvas!.width / 2, canvas!.height / 2);
+      // context.rotate(rad)
       context.beginPath();
       context.moveTo(...points[0]);
       for (let i = 1; i < points.length; i++) {
         context.lineTo(...points[i]);
       }
       context.closePath();
-      context.transform(
-        0,
-        1*Math.sin(rad),
-        1*Math.cos(rad),
-        -1*Math.sin(rad),
-        1*Math.cos(rad),
-        0
-      )
-      context.translate(-canvas!.width/2,-canvas!.height/2);
+      context.translate(-canvas!.width / 2, -canvas!.height / 2);
       context.restore();
-      context.stroke();
       context.fill();
+
     }
 
     function randomTriangles() {
@@ -51,7 +49,6 @@ function Performance() {
       const rad = Math.random() * Math.PI * 2;
       const u_dir = [Math.cos(rad), Math.sin(rad)];
       const startTime = performance.now();
-
       return {
         u_rotation,
         u_scale,
@@ -60,10 +57,14 @@ function Performance() {
         u_dir,
         startTime
       };
+
     };
 
+    function triangle() {
+      
+    }
+
     let triangles: any[] = [];
-    const COUNT = 20;
     // 执行绘制
     function draw() {
       if (ctx && canvas) {
@@ -74,15 +75,17 @@ function Performance() {
         triangles.forEach(tri => {
           tri.u_time = (performance.now() - tri.startTime) / 1000;
           let p = Math.min(1.0, tri.u_time / tri.u_duration);
-          let rad = tri.u_rotation + 3.14 * 10.0 * p;
+          let angle = tri.u_rotation + 3.14 * 10.0 * p;
           let scale = tri.u_scale * p * (2.0 - p);
-          let x = 2.0 * tri.u_dir[0] * p * p;
-          let y = 2.0 * tri.u_dir[1] * p * p;
+          let cx = 1 * Math.cos(angle) + 1 * Math.sin(angle);
+          let cy = 1 * Math.cos(angle) - 1 * Math.sin(angle);
+          x += tri.u_dir[0]/5;
+          y += tri.u_dir[1]/5;
           const type = 3;
-          let points = regularShape(x,y,10,type);
-          drawShape(ctx,points,rad)
+          let points = regularShape(x, y, 10, type);
+          drawShape(ctx, points, angle, cx, cy)
         });
-  
+
         triangles = triangles.filter(tri => {
           return tri.u_time <= tri.u_duration;
         });
@@ -90,6 +93,7 @@ function Performance() {
         requestAnimationFrame(draw);
       }
     }
+
     draw();
   }
   useEffect(() => {
@@ -100,7 +104,7 @@ function Performance() {
   return (
     <div>
       <button onClick={() => { setRun(true), performances() }}>粒子效果</button>
-      <canvas width="600" height="600"></canvas>
+      <canvas width="800" height="800"></canvas>
     </div>
   );
 }
