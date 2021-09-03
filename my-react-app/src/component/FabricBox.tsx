@@ -2,7 +2,6 @@ import React, { useEffect } from 'react';
 let fabric = window.fabric;
 function FabricBox() {
     let canvasFabric: fabric.Canvas | null = null;
-
     let group = document.getElementById('group');
     let ungroup = document.getElementById('ungroup');
     let rubber = document.getElementById('rubber');

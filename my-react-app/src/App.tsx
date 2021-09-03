@@ -5,6 +5,7 @@ import Home from './Home'
 import WebglFilter from './component/WebglFilter'
 import Vector from './vector/vector';
 import Performance from './performance/performance' 
+import Test from './test/test';
 
 
 function App() {
@@ -26,6 +27,9 @@ function App() {
             <li>
               <Link to="/performance">Performance</Link>
             </li>
+            <li>
+              <Link to="/test">Test</Link>
+            </li>
           </ul>
         </nav>
 
@@ -33,6 +37,7 @@ function App() {
         <Route path="/webglFilter" exact component={WebglFilter} />
         <Route path="/vector" exact component={Vector} />
         <Route path="/performance" exact component={Performance} />
+        <Route path="/test" exact component={Test} />
       </main>
     </Router>
   )
